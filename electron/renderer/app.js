@@ -2,6 +2,7 @@ const elements = {
   statusPill: document.querySelector('#status-pill'),
   statusText: document.querySelector('#status-text'),
   pageTitle: document.querySelector('#page-title'),
+  workspaceHeader: document.querySelector('#workspace-header'),
   connectionCard: document.querySelector('#connection-card'),
   connectionTitle: document.querySelector('#connection-title'),
   connectionDetail: document.querySelector('#connection-detail'),
@@ -34,7 +35,9 @@ const elements = {
   views: [...document.querySelectorAll('[data-view-panel]')],
   toast: document.querySelector('#toast'),
   settingTheme: document.querySelector('#setting-theme'),
-  settingLanguage: document.querySelector('#setting-language')
+  settingLanguage: document.querySelector('#setting-language'),
+  openDiagnostics: document.querySelector('#open-diagnostics'),
+  diagnosticsBack: document.querySelector('#diagnostics-back')
 };
 
 const prefs = window.TtpPrefs.load();
@@ -97,8 +100,10 @@ function setView(view) {
   if (!['control', 'diagnostics', 'settings'].includes(view)) return;
   activeView = view;
 
+  // Diagnostics is opened from Settings — keep Settings highlighted in the sidebar.
   for (const item of elements.navItems) {
-    const selected = item.dataset.view === view;
+    const selected = item.dataset.view === view
+      || (view === 'diagnostics' && item.dataset.view === 'settings');
     item.classList.toggle('is-active', selected);
     item.setAttribute('aria-selected', String(selected));
   }
@@ -109,7 +114,14 @@ function setView(view) {
     panel.hidden = !selected;
   }
 
-  elements.pageTitle.textContent = pageTitleFor(view);
+  // Secondary page: title lives in the diagnostics toolbar (with back arrow).
+  const isDiagnostics = view === 'diagnostics';
+  if (elements.workspaceHeader) {
+    elements.workspaceHeader.hidden = isDiagnostics;
+  }
+  if (!isDiagnostics) {
+    elements.pageTitle.textContent = pageTitleFor(view);
+  }
 }
 
 function routingLabel(mode) {
@@ -277,6 +289,12 @@ function onLanguageChange() {
 
 for (const item of elements.navItems) {
   item.addEventListener('click', () => setView(item.dataset.view));
+}
+if (elements.openDiagnostics) {
+  elements.openDiagnostics.addEventListener('click', () => setView('diagnostics'));
+}
+if (elements.diagnosticsBack) {
+  elements.diagnosticsBack.addEventListener('click', () => setView('settings'));
 }
 
 elements.advertiseButton.addEventListener('click', () => {

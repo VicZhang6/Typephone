@@ -430,19 +430,27 @@ function trayMenuKey(status) {
   ].join('|');
 }
 
+function popupTrayMenu(bounds) {
+  if (!tray) return;
+  const status = lastTrayStatus || offlineStatus();
+  const menu = buildTrayMenu(status);
+  // Keep context menu in sync so platform click behavior is consistent.
+  tray.setContextMenu(menu);
+  if (bounds) {
+    tray.popUpContextMenu(menu, bounds);
+  } else {
+    tray.popUpContextMenu(menu);
+  }
+}
+
 function createTray() {
   tray = new Tray(trayIcon());
   tray.setToolTip('Typephone');
   tray.setIgnoreDoubleClickEvents(true);
 
-  // Left click: toggle control window.
-  // Right click (macOS): status / 输入模式 / 退出. Avoid setContextMenu on
-  // darwin so left-click is not swallowed by the menu.
-  tray.on('click', () => toggleMainWindow());
-  tray.on('right-click', (_event, bounds) => {
-    const status = lastTrayStatus || offlineStatus();
-    tray.popUpContextMenu(buildTrayMenu(status), bounds);
-  });
+  // Click (left or right) opens the status menu — not the main window.
+  tray.on('click', (_event, bounds) => popupTrayMenu(bounds));
+  tray.on('right-click', (_event, bounds) => popupTrayMenu(bounds));
 
   updateTray(offlineStatus());
 }
@@ -460,10 +468,8 @@ function updateTray(status) {
   if (key === lastTrayMenuKey) return;
   lastTrayMenuKey = key;
 
-  // Windows/Linux: attach menu for right-click. macOS uses popUpContextMenu above.
-  if (process.platform !== 'darwin') {
-    tray.setContextMenu(buildTrayMenu(status));
-  }
+  // Refresh menu contents (mode radio, advertise label, etc.).
+  tray.setContextMenu(buildTrayMenu(status));
 }
 
 function createWindow() {

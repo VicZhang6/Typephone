@@ -441,6 +441,7 @@ summary:focus-visible,
 .hi[data-icon="signal-slash"] { --hi: url("./icons/signal-slash.svg"); }
 .hi[data-icon="link-slash"] { --hi: url("./icons/link-slash.svg"); }
 .hi[data-icon="cog-6-tooth"] { --hi: url("./icons/cog-6-tooth.svg"); }
+.hi[data-icon="arrow-left"] { --hi: url("./icons/arrow-left.svg"); }
 
 /* —— App chrome: sidebar + workspace (Geist spacing rhythm) —— */
 .app-frame {
@@ -630,6 +631,13 @@ summary:focus-visible,
   /* Header padding band is also draggable (alongside fixed titlebar strip). */
   -webkit-app-region: drag;
   app-region: drag;
+}
+.workspace-header[hidden] {
+  display: none;
+}
+/* Keep drag strip when primary title is hidden (diagnostics secondary page) */
+.workspace.is-secondary-page {
+  padding-top: 0;
 }
 /* Simple page title only */
 .workspace-header h1 {
@@ -1093,7 +1101,7 @@ button:disabled {
   font-size: 13px;
 }
 
-/* Settings */
+/* Settings — flat rows, native select restyled (no blue focus flash) */
 .settings-page {
   max-width: 480px;
 }
@@ -1106,60 +1114,210 @@ button:disabled {
 .settings-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  border-top: 1px solid var(--ds-gray-400);
+  gap: var(--space-2);
+  border: 0;
 }
 .settings-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  min-height: 52px;
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--ds-gray-400);
-  cursor: pointer;
+  min-height: 48px;
+  padding: var(--space-2) 0;
+  border: 0;
+  cursor: default;
+}
+.settings-row-action {
+  cursor: default;
 }
 .settings-label {
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
   color: var(--ink);
+  flex: none;
 }
-.settings-select {
-  min-width: 160px;
-  height: var(--control-h-sm);
-  padding: 0 10px;
+.settings-link-button {
+  height: 32px;
+  padding: 0 12px;
   border: 1px solid var(--ds-gray-400);
-  border-radius: var(--radius-sm);
-  background: var(--ds-background-100);
+  border-radius: 8px;
+  background: var(--ds-gray-100);
   color: var(--ds-gray-1000);
   font: inherit;
   font-size: var(--text-button);
+  font-weight: 500;
   line-height: var(--text-button-lh);
   cursor: pointer;
   -webkit-app-region: no-drag;
   app-region: no-drag;
+  transition:
+    background-color 120ms var(--ease-out),
+    border-color 120ms var(--ease-out);
 }
-.settings-select:hover {
+.settings-link-button:hover {
+  background: var(--ds-gray-200);
   border-color: var(--ds-gray-500);
 }
+.settings-link-button:focus,
+.settings-link-button:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-color: var(--ds-gray-600);
+}
+.settings-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 220px;
+}
+.settings-select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background-color: var(--ds-gray-700);
+  -webkit-mask: url("./icons/chevron-down.svg") center / contain no-repeat;
+  mask: url("./icons/chevron-down.svg") center / contain no-repeat;
+  opacity: 0.85;
+}
+.settings-select {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 148px;
+  max-width: 220px;
+  height: 32px;
+  margin: 0;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--ds-gray-400);
+  border-radius: 8px;
+  background: var(--ds-gray-100);
+  color: var(--ds-gray-1000);
+  font: inherit;
+  font-size: var(--text-button);
+  line-height: var(--text-button-lh);
+  text-align: left;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+  transition:
+    background-color 120ms var(--ease-out),
+    border-color 120ms var(--ease-out);
+}
+.settings-select:hover {
+  background: var(--ds-gray-200);
+  border-color: var(--ds-gray-500);
+}
+/* Soft gray focus — no blue flash / thick ring */
+.settings-select:focus,
 .settings-select:focus-visible {
   outline: none;
-  box-shadow:
-    0 0 0 2px var(--focus-ring-inner),
-    0 0 0 4px var(--focus-ring-outer);
+  border-color: var(--ds-gray-600);
+  background: var(--ds-gray-100);
+  box-shadow: none;
+}
+.settings-select:active {
+  background: var(--ds-gray-200);
+}
+
+@media (prefers-color-scheme: dark) {
+  .settings-select {
+    background: var(--ds-gray-200);
+    border-color: var(--ds-gray-400);
+  }
+  .settings-select:hover,
+  .settings-select:active {
+    background: var(--ds-gray-300);
+    border-color: var(--ds-gray-500);
+  }
+  .settings-select:focus,
+  .settings-select:focus-visible {
+    background: var(--ds-gray-200);
+    border-color: var(--ds-gray-600);
+  }
+}
+
+html[data-theme="light"] .settings-select {
+  background: var(--ds-gray-100);
+  border-color: var(--ds-gray-400);
+  color: #171717;
+}
+html[data-theme="dark"] .settings-select {
+  background: #1f1f1f;
+  border-color: #2e2e2e;
+  color: #ededed;
 }
 
 /* —— Diagnostics page —— */
 .diagnostics-page {
   padding: 0;
 }
+/* Secondary page header: ← 诊断  ···  actions (one row) */
 .diagnostics-toolbar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: var(--space-4);
-  margin-bottom: var(--space-3);
+  min-height: 40px;
+  margin-bottom: var(--space-4);
+  /* Offset for traffic lights / titlebar when primary header is hidden */
+  padding-top: calc(var(--titlebar-offset) - 12px);
+}
+.diagnostics-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.diagnostics-back {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ds-gray-1000);
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+  transition: background-color 120ms var(--ease-out);
+}
+.diagnostics-back:hover {
+  background: var(--ds-gray-100);
+}
+.diagnostics-back:focus,
+.diagnostics-back:focus-visible {
+  outline: none;
+  box-shadow: none;
+  background: var(--ds-gray-100);
+}
+.diagnostics-back .hi {
+  width: 18px;
+  height: 18px;
+}
+.diagnostics-title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -.32px;
+  color: var(--ink);
+}
+.diagnostic-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
 }
 
 .diagnostics-meta {
@@ -1232,9 +1390,9 @@ button:disabled {
   gap: var(--space-3);
   min-height: var(--control-h);
   padding: 0;
-  border-bottom: 1px solid var(--ds-gray-400);
+  border: 0;
+  border-bottom: 0;
 }
-.diag-list > div:last-child { border-bottom: 0; }
 dt {
   display: flex;
   align-items: center;
@@ -1281,14 +1439,6 @@ dd[data-tone="warning"] { color: var(--ink); }
   text-align: left;
   word-break: break-all;
 }
-.diagnostic-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
-  gap: var(--space-3);
-}
-
 .toast {
   position: fixed;
   right: var(--space-6);
@@ -1315,8 +1465,11 @@ dd[data-tone="warning"] { color: var(--ink); }
     padding-right: var(--space-6);
   }
   .mode-grid { grid-template-columns: 1fr; }
-  .diagnostics-toolbar { flex-direction: column; }
-  .diagnostic-actions { justify-content: flex-start; }
+  .diagnostics-toolbar {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .diagnostic-actions { justify-content: flex-end; margin-left: auto; }
 }
 
 @media (max-width: 600px) {

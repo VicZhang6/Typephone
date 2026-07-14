@@ -102,6 +102,9 @@
 
       settingsTheme: '主题',
       settingsLanguage: '语言',
+      settingsDiagnostics: '诊断',
+      settingsOpenDiagnostics: '打开',
+      backToSettings: '返回设置',
       themeSystem: '跟随系统',
       themeLight: '浅色',
       themeDark: '深色',
@@ -212,6 +215,9 @@
 
       settingsTheme: 'Theme',
       settingsLanguage: 'Language',
+      settingsDiagnostics: 'Diagnostics',
+      settingsOpenDiagnostics: 'Open',
+      backToSettings: 'Back to Settings',
       themeSystem: 'System',
       themeLight: 'Light',
       themeDark: 'Dark',
