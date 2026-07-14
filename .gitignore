@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+/tmp/
+*.app
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+
+# Xcode / Swift
+*.o
+*.swiftmodule
+*.swiftdoc
+*.swiftsourceinfo
+ModuleCache.noindex/
+
+# Electron / packaging
+*.dmg
+*.zip
+*.blockmap
+out/
+
+# Logs & profiling
+*.log
+npm-debug.log*
+default.profraw
+*.profraw
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Coverage
+coverage/
+*.lcov

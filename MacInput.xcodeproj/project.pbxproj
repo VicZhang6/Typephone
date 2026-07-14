@@ -1,0 +1,522 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0305A332110837C946E96FB1 /* HIDReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D202D82F13C03E109CFAB21C /* HIDReport.swift */; };
+		18DCE334E80CC3D6FB44B9B7 /* SleepWakeMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6A167CC2AD97D6B84F6885 /* SleepWakeMonitor.swift */; };
+		1E8762393D72CA80D2520193 /* MacInputApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A013722F5448AD70176EE0 /* MacInputApp.swift */; };
+		39DA2C2F34C2E4C8FCE1EBE7 /* BLEPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF2EB1019B56ADA65712C0F /* BLEPeripheral.swift */; };
+		5F650D6CC7E661FE7C63FF04 /* HIDReportQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E9993221E183716AC80963 /* HIDReportQueueTests.swift */; };
+		64D80B6696854EE41F32DB7D /* ConnectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1976FD439DAB804E7692E676 /* ConnectionController.swift */; };
+		65BE34006D9747395F34DAEF /* KeyCodeMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4638919E29A94CDD2C803E7E /* KeyCodeMapperTests.swift */; };
+		6CE4F69580AD4431EF897ECC /* KeyboardCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AF662340B2CF0A70A8F64 /* KeyboardCapture.swift */; };
+		79646048C21B140EE882FEB5 /* KeyboardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B28247A55DAEA9A1E1BF92 /* KeyboardState.swift */; };
+		8CE76E57606BA83B04315F25 /* HIDReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670CCEDDEF6D08183AB149DA /* HIDReportTests.swift */; };
+		95FCF319214A1426666DA1F5 /* DiagnosticsRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A970ABD39D9B3E763F2D6E /* DiagnosticsRecorder.swift */; };
+		98FCD1F530864441CDDBCC66 /* HIDProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8A070BE35DB4ECF498B7E0 /* HIDProfile.swift */; };
+		A1A72A99CF126348F35CB0FE /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C307E55E8B9737CF224F3485 /* KeyCodeMapper.swift */; };
+		A740058CF386CB2D56C4AE8C /* HIDReportDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53CBCA02CA89696EBFBFF6B6 /* HIDReportDescriptor.swift */; };
+		BC1210DECEFEF011CD82F5A9 /* KeyboardStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC7A468050D50978F998AD1 /* KeyboardStateTests.swift */; };
+		C19D135A64CDCA14CB9889F5 /* HIDReportQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43315F7FE3E873DE3A3244DE /* HIDReportQueue.swift */; };
+		C42A3737C6006DDE3C01475B /* ControlServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2316698DD31ABA881ADF18E /* ControlServer.swift */; };
+		C5FA06CEC6FD27F5DF6D2582 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB52861A9A1FAE3A9CCC280 /* MenuBarController.swift */; };
+		E3612A138196DF85A45EAF66 /* RoutingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD95A0177323DB691E37AAF /* RoutingController.swift */; };
+		EBD48F4C78F1AA56241507C4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF292D401BCA13E115C7FC8D /* AppState.swift */; };
+		F7F987AAA6A84A52A60CC604 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FB1C79A511A1D1DA38E791 /* PermissionManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2359F516675919DCCE0E72BE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B916240CB51472C1410FC8A2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9286C14FEE223FCD30A0DBE;
+			remoteInfo = MacInput;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1976FD439DAB804E7692E676 /* ConnectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionController.swift; sourceTree = "<group>"; };
+		20B28247A55DAEA9A1E1BF92 /* KeyboardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardState.swift; sourceTree = "<group>"; };
+		2E8A070BE35DB4ECF498B7E0 /* HIDProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDProfile.swift; sourceTree = "<group>"; };
+		392E28E672FB1DB6F29F0C57 /* MacInputTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacInputTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		43315F7FE3E873DE3A3244DE /* HIDReportQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReportQueue.swift; sourceTree = "<group>"; };
+		4638919E29A94CDD2C803E7E /* KeyCodeMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapperTests.swift; sourceTree = "<group>"; };
+		4DD95A0177323DB691E37AAF /* RoutingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingController.swift; sourceTree = "<group>"; };
+		53CBCA02CA89696EBFBFF6B6 /* HIDReportDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReportDescriptor.swift; sourceTree = "<group>"; };
+		66FB1C79A511A1D1DA38E791 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		670CCEDDEF6D08183AB149DA /* HIDReportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReportTests.swift; sourceTree = "<group>"; };
+		8BB52861A9A1FAE3A9CCC280 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
+		96A970ABD39D9B3E763F2D6E /* DiagnosticsRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsRecorder.swift; sourceTree = "<group>"; };
+		9DC7A468050D50978F998AD1 /* KeyboardStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardStateTests.swift; sourceTree = "<group>"; };
+		A790F73F98FF04076499F9FE /* MacInput.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacInput.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF3AF662340B2CF0A70A8F64 /* KeyboardCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardCapture.swift; sourceTree = "<group>"; };
+		BF6A167CC2AD97D6B84F6885 /* SleepWakeMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepWakeMonitor.swift; sourceTree = "<group>"; };
+		C2316698DD31ABA881ADF18E /* ControlServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlServer.swift; sourceTree = "<group>"; };
+		C307E55E8B9737CF224F3485 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
+		D202D82F13C03E109CFAB21C /* HIDReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReport.swift; sourceTree = "<group>"; };
+		D8A013722F5448AD70176EE0 /* MacInputApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacInputApp.swift; sourceTree = "<group>"; };
+		DF292D401BCA13E115C7FC8D /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		F2E9993221E183716AC80963 /* HIDReportQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReportQueueTests.swift; sourceTree = "<group>"; };
+		FAF2EB1019B56ADA65712C0F /* BLEPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEPeripheral.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0F9C8DAB8FC360DE2E2E41C5 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				DF292D401BCA13E115C7FC8D /* AppState.swift */,
+				D8A013722F5448AD70176EE0 /* MacInputApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		55EACBBB8645B1C257CB75E6 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				0F9C8DAB8FC360DE2E2E41C5 /* App */,
+				D3B9E8CF42DC6637E0F1D6B3 /* Bluetooth */,
+				646138A81DDF80BF5DF1E99F /* Input */,
+				F0CB6FC48842E6C129CEE6A4 /* System */,
+				C9ABF8C5FA365FE71B924CFC /* UI */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		646138A81DDF80BF5DF1E99F /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				BF3AF662340B2CF0A70A8F64 /* KeyboardCapture.swift */,
+				20B28247A55DAEA9A1E1BF92 /* KeyboardState.swift */,
+				C307E55E8B9737CF224F3485 /* KeyCodeMapper.swift */,
+				4DD95A0177323DB691E37AAF /* RoutingController.swift */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
+		C9ABF8C5FA365FE71B924CFC /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				8BB52861A9A1FAE3A9CCC280 /* MenuBarController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		D3B9E8CF42DC6637E0F1D6B3 /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				FAF2EB1019B56ADA65712C0F /* BLEPeripheral.swift */,
+				1976FD439DAB804E7692E676 /* ConnectionController.swift */,
+				2E8A070BE35DB4ECF498B7E0 /* HIDProfile.swift */,
+				D202D82F13C03E109CFAB21C /* HIDReport.swift */,
+				53CBCA02CA89696EBFBFF6B6 /* HIDReportDescriptor.swift */,
+				43315F7FE3E873DE3A3244DE /* HIDReportQueue.swift */,
+			);
+			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		D7A4F3F3BACC008AF169AB8D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A790F73F98FF04076499F9FE /* MacInput.app */,
+				392E28E672FB1DB6F29F0C57 /* MacInputTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DEB3F6B64F7EB849885AC7BF = {
+			isa = PBXGroup;
+			children = (
+				55EACBBB8645B1C257CB75E6 /* Sources */,
+				DF5AFADFB8E9F6DDD63A633F /* Tests */,
+				D7A4F3F3BACC008AF169AB8D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DF5AFADFB8E9F6DDD63A633F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F2E9993221E183716AC80963 /* HIDReportQueueTests.swift */,
+				670CCEDDEF6D08183AB149DA /* HIDReportTests.swift */,
+				9DC7A468050D50978F998AD1 /* KeyboardStateTests.swift */,
+				4638919E29A94CDD2C803E7E /* KeyCodeMapperTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		F0CB6FC48842E6C129CEE6A4 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				C2316698DD31ABA881ADF18E /* ControlServer.swift */,
+				96A970ABD39D9B3E763F2D6E /* DiagnosticsRecorder.swift */,
+				66FB1C79A511A1D1DA38E791 /* PermissionManager.swift */,
+				BF6A167CC2AD97D6B84F6885 /* SleepWakeMonitor.swift */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C6630FA11F510881CBB88929 /* MacInputTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 915A8741C175E2224788CA59 /* Build configuration list for PBXNativeTarget "MacInputTests" */;
+			buildPhases = (
+				D20247C38667F21F50A91190 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				17C4C5F9C01243C24F317655 /* PBXTargetDependency */,
+			);
+			name = MacInputTests;
+			packageProductDependencies = (
+			);
+			productName = MacInputTests;
+			productReference = 392E28E672FB1DB6F29F0C57 /* MacInputTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C9286C14FEE223FCD30A0DBE /* MacInput */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7F3558B63A1B2F175EF499DE /* Build configuration list for PBXNativeTarget "MacInput" */;
+			buildPhases = (
+				E640900C7A9854AC2444B05D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacInput;
+			packageProductDependencies = (
+			);
+			productName = MacInput;
+			productReference = A790F73F98FF04076499F9FE /* MacInput.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B916240CB51472C1410FC8A2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C6630FA11F510881CBB88929 = {
+						DevelopmentTeam = "";
+					};
+					C9286C14FEE223FCD30A0DBE = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 94153042D273084BA34B2B91 /* Build configuration list for PBXProject "MacInput" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DEB3F6B64F7EB849885AC7BF;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D7A4F3F3BACC008AF169AB8D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C9286C14FEE223FCD30A0DBE /* MacInput */,
+				C6630FA11F510881CBB88929 /* MacInputTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D20247C38667F21F50A91190 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F650D6CC7E661FE7C63FF04 /* HIDReportQueueTests.swift in Sources */,
+				8CE76E57606BA83B04315F25 /* HIDReportTests.swift in Sources */,
+				65BE34006D9747395F34DAEF /* KeyCodeMapperTests.swift in Sources */,
+				BC1210DECEFEF011CD82F5A9 /* KeyboardStateTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E640900C7A9854AC2444B05D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBD48F4C78F1AA56241507C4 /* AppState.swift in Sources */,
+				39DA2C2F34C2E4C8FCE1EBE7 /* BLEPeripheral.swift in Sources */,
+				64D80B6696854EE41F32DB7D /* ConnectionController.swift in Sources */,
+				C42A3737C6006DDE3C01475B /* ControlServer.swift in Sources */,
+				95FCF319214A1426666DA1F5 /* DiagnosticsRecorder.swift in Sources */,
+				98FCD1F530864441CDDBCC66 /* HIDProfile.swift in Sources */,
+				0305A332110837C946E96FB1 /* HIDReport.swift in Sources */,
+				A740058CF386CB2D56C4AE8C /* HIDReportDescriptor.swift in Sources */,
+				C19D135A64CDCA14CB9889F5 /* HIDReportQueue.swift in Sources */,
+				A1A72A99CF126348F35CB0FE /* KeyCodeMapper.swift in Sources */,
+				6CE4F69580AD4431EF897ECC /* KeyboardCapture.swift in Sources */,
+				79646048C21B140EE882FEB5 /* KeyboardState.swift in Sources */,
+				1E8762393D72CA80D2520193 /* MacInputApp.swift in Sources */,
+				C5FA06CEC6FD27F5DF6D2582 /* MenuBarController.swift in Sources */,
+				F7F987AAA6A84A52A60CC604 /* PermissionManager.swift in Sources */,
+				E3612A138196DF85A45EAF66 /* RoutingController.swift in Sources */,
+				18DCE334E80CC3D6FB44B9B7 /* SleepWakeMonitor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		17C4C5F9C01243C24F317655 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9286C14FEE223FCD30A0DBE /* MacInput */;
+			targetProxy = 2359F516675919DCCE0E72BE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0C5934536EC56D0BC964130C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.viczhang.macinput.tests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacInput.app/Contents/MacOS/MacInput";
+			};
+			name = Debug;
+		};
+		10A2E5C3B4ED039E01DA7CF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		3A05B098E67BFA87E0541D48 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.viczhang.macinput.tests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacInput.app/Contents/MacOS/MacInput";
+			};
+			name = Release;
+		};
+		4168AFD4EBBBFFA139082331 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/MacInput.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.viczhang.macinput;
+				PRODUCT_NAME = MacInput;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		81CDD7CE430FB7E01206D2B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		BC65E668DA788006C186D427 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/MacInput.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.viczhang.macinput;
+				PRODUCT_NAME = MacInput;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7F3558B63A1B2F175EF499DE /* Build configuration list for PBXNativeTarget "MacInput" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4168AFD4EBBBFFA139082331 /* Debug */,
+				BC65E668DA788006C186D427 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		915A8741C175E2224788CA59 /* Build configuration list for PBXNativeTarget "MacInputTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C5934536EC56D0BC964130C /* Debug */,
+				3A05B098E67BFA87E0541D48 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		94153042D273084BA34B2B91 /* Build configuration list for PBXProject "MacInput" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10A2E5C3B4ED039E01DA7CF9 /* Debug */,
+				81CDD7CE430FB7E01206D2B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B916240CB51472C1410FC8A2 /* Project object */;
+}
