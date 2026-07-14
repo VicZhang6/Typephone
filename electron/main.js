@@ -3,6 +3,7 @@ const { execFileSync, spawn } = require('node:child_process');
 const fs = require('node:fs');
 const net = require('node:net');
 const path = require('node:path');
+const { APP_NAME, LOG_PREFIX, quitLabel } = require('./shared/branding');
 
 /** Opaque fallback when vibrancy is unavailable. */
 function windowBackgroundColor() {
@@ -222,7 +223,7 @@ function launchNativeBackend() {
   const nativeApp = resolveNativeAppPath();
   const binary = resolveNativeBinary(nativeApp);
   if (!fs.existsSync(binary)) {
-    console.warn(`[typephone] Native helper not found: ${binary}`);
+    console.warn(`[${LOG_PREFIX}] Native helper not found: ${binary}`);
     return;
   }
 
@@ -246,11 +247,11 @@ function launchNativeBackend() {
       nativeHelperPid = null;
     }
     if (code || signal) {
-      console.warn(`[typephone] Native helper exited code=${code} signal=${signal}`);
+      console.warn(`[${LOG_PREFIX}] Native helper exited code=${code} signal=${signal}`);
     }
   });
   child.once('error', (error) => {
-    console.warn('[typephone] Failed to launch native helper:', error.message);
+    console.warn(`[${LOG_PREFIX}] Failed to launch native helper:`, error.message);
     if (nativeHelper === child) {
       nativeHelper = null;
       nativeHelperPid = null;
@@ -363,15 +364,15 @@ function buildTrayMenu(status) {
   const connected = status.status === 'connected' || status.isSubscribed;
   const line2 = connected
     ? `已连接 · ${modeTitle}`
-    : (status.isAdvertising ? '正在广播，等待 iPhone' : '未广播');
+    : (status.isAdvertising ? '等待 iPhone 配对' : '未在等待配对');
 
   return Menu.buildFromTemplate([
-    { label: status.statusText || 'Typephone', enabled: false },
-    { label: line2, enabled: false },
+    { label: APP_NAME, enabled: false },
+    { label: status.statusText || line2, enabled: false },
     { type: 'separator' },
     { label: '显示窗口', click: () => showMainWindow() },
     {
-      label: status.isAdvertising ? '停止广播' : '开始广播',
+      label: status.isAdvertising ? '停止等待配对' : '开始等待配对',
       click: async () => {
         try {
           await requestNative(status.isAdvertising ? 'stopAdvertising' : 'startAdvertising');
@@ -410,7 +411,7 @@ function buildTrayMenu(status) {
     },
     { type: 'separator' },
     {
-      label: '退出 Typephone',
+      label: quitLabel('zh-CN'),
       click: () => {
         isQuitting = true;
         app.quit();
@@ -445,7 +446,7 @@ function popupTrayMenu(bounds) {
 
 function createTray() {
   tray = new Tray(trayIcon());
-  tray.setToolTip('Typephone');
+  tray.setToolTip(APP_NAME);
   tray.setIgnoreDoubleClickEvents(true);
 
   // Click (left or right) opens the status menu — not the main window.
@@ -460,8 +461,8 @@ function updateTray(status) {
   lastTrayStatus = status;
   const modeTitle = status.routingModeTitle || '关闭';
   const tip = status.statusText
-    ? `Typephone · ${status.statusText} · ${modeTitle}`
-    : 'Typephone';
+    ? `${APP_NAME} · ${status.statusText} · ${modeTitle}`
+    : APP_NAME;
   tray.setToolTip(tip);
 
   const key = trayMenuKey(status);
@@ -480,7 +481,7 @@ function createWindow() {
     minWidth: 860,
     minHeight: 680,
     show: false,
-    title: 'Typephone',
+    title: APP_NAME,
     titleBarStyle: 'hiddenInset',
     // Allow CSS -webkit-app-region: drag on the custom title strip.
     trafficLightPosition: { x: 16, y: 18 },
@@ -612,7 +613,7 @@ app.on('window-all-closed', () => {
 function handleProcessSignal(signal) {
   if (isQuitting && nativeShutdownComplete) return;
   isQuitting = true;
-  console.warn(`[typephone] Received ${signal}, stopping native helper…`);
+  console.warn(`[${LOG_PREFIX}] Received ${signal}, stopping native helper…`);
   killElectronHelpersSync();
   destroyUiShell();
   nativeShutdownComplete = true;

@@ -36,7 +36,7 @@ final class AppState: ObservableObject {
         case .unknown: "未启动"
         case .bluetoothUnavailable: "蓝牙不可用"
         case .ready: "就绪"
-        case .advertising: "正在广播"
+        case .advertising: "等待配对"
         case .connected: "已连接 iPhone"
         case .error(let msg): "异常：\(msg)"
         }
@@ -126,7 +126,7 @@ final class AppState: ObservableObject {
     func restart() {
         routing.releaseAll()
         connection.restart()
-        diagnostics.record("重新广播")
+        diagnostics.record("重新等待配对")
     }
 
     @discardableResult
@@ -192,7 +192,7 @@ final class AppState: ObservableObject {
             guard let self else { return }
             permissions.refresh()
             peripheral.resumeAfterWake()
-            diagnostics.record("Mac 已唤醒，正在恢复 BLE 广播")
+            diagnostics.record("Mac 已唤醒，正在恢复等待配对")
         }
     }
 }

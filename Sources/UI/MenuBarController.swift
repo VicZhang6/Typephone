@@ -58,7 +58,7 @@ final class MenuBarController: NSObject {
         advertise.target = self
         menu.addItem(advertise)
 
-        let restart = NSMenuItem(title: "重新广播", action: #selector(restart(_:)), keyEquivalent: "")
+        let restart = NSMenuItem(title: "重新等待配对", action: #selector(restart(_:)), keyEquivalent: "")
         restart.target = self
         menu.addItem(restart)
 
@@ -109,8 +109,8 @@ final class MenuBarController: NSObject {
     }
 
     private var toggleTitle: String {
-        if state.peripheral.isAdvertising || state.peripheral.status == .advertising { return "停止广播" }
-        return "开始广播"
+        if state.peripheral.isAdvertising || state.peripheral.status == .advertising { return "停止等待配对" }
+        return "开始等待配对"
     }
 
     private func makeStatusItem() -> NSMenuItem {

@@ -27,6 +27,9 @@
       "electron/**/*",
       "package.json"
     ],
+    "extraMetadata": {
+      "name": "typephone"
+    },
     "extraResources": [
       {
         "from": "build/native/Build/Products/Release/MacInput.app",

@@ -115,7 +115,12 @@
                 </button>
               </div>
               <div class="emergency-note">
-                <span class="shortcut">⌃⌥⌘Esc</span>
+                <span class="shortcut" aria-label="Control Option Command Escape">
+                  <kbd class="shortcut-key">⌃</kbd>
+                  <kbd class="shortcut-key">⌥</kbd>
+                  <kbd class="shortcut-key">⌘</kbd>
+                  <kbd class="shortcut-key">Esc</kbd>
+                </span>
                 <span data-i18n="emergencyNote">紧急快捷键始终退出独占模式并释放所有按键。</span>
               </div>
 
@@ -134,14 +139,17 @@
                 <summary>
                   <span class="help-text">
                     <strong data-i18n="helpTitle">遇到问题？</strong>
-                    <small data-i18n="helpHint">点击展开帮助与故障排查</small>
+                    <small data-i18n="helpHint">展开故障排查步骤</small>
+                  </span>
+                  <span class="help-chevron" aria-hidden="true">
+                    <span class="hi hi-sm" data-icon="chevron-down"></span>
                   </span>
                 </summary>
-                <ol>
-                  <li data-i18n="help1">在 iPhone 蓝牙设置中忽略旧的 Typephone Keyboard。</li>
-                  <li data-i18n="help2">点击「重新广播」，等待设备重新出现。</li>
-                  <li data-i18n="help3">完成配对后打开备忘录测试。</li>
-                  <li data-i18n="help4">若仍失败，到「诊断」页导出诊断 JSON。</li>
+                <ol class="help-steps">
+                  <li data-i18n="help1">在 iPhone「设置 → 蓝牙」中忽略旧的 Typephone Keyboard</li>
+                  <li data-i18n="help2">在诊断页点击「重新等待配对」，等待设备重新出现</li>
+                  <li data-i18n="help3">配对成功后，在 iPhone 备忘录中试打字</li>
+                  <li data-i18n="help4">若仍失败，到「诊断」页导出诊断 JSON</li>
                 </ol>
               </details>
             </section>
@@ -170,7 +178,7 @@
                   <h2 class="diagnostics-title" id="diagnostics-title" data-i18n="pageDiagnostics">诊断</h2>
                 </div>
                 <div class="diagnostic-actions">
-                  <button class="secondary-button" id="restart-button" type="button" data-i18n="btnRestart">重新广播</button>
+                  <button class="secondary-button" id="restart-button" type="button" data-i18n="btnRestart">重新等待配对</button>
                   <button class="primary-button compact-primary" id="export-button" type="button" data-i18n="btnExport">导出诊断 JSON</button>
                 </div>
               </div>
@@ -187,7 +195,7 @@
                     <dd id="bluetooth-state">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="wifi"></span></span><span data-i18n="diagAdvertising">广播</span></dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="wifi"></span></span><span data-i18n="diagAdvertising">等待配对</span></dt>
                     <dd id="advertising-state">—</dd>
                   </div>
                   <div>
@@ -283,6 +291,7 @@
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="../shared/branding.js"></script>
     <script src="i18n.js"></script>
     <script src="prefs.js"></script>
     <script src="app.js"></script>

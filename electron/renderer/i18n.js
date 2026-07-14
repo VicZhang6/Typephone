@@ -1,11 +1,16 @@
 /**
- * Typephone — UI strings (zh-CN / en).
+ * UI strings (zh-CN / en).
  * Language preference: system | zh-CN | en
+ * Product name comes from shared branding (single source of truth).
  */
 (function (global) {
+  const brand = global.TtpBranding || { APP_NAME: 'Typephone', APP_KEYBOARD_NAME: 'Typephone Keyboard' };
+  const APP_NAME = brand.APP_NAME;
+  const APP_KEYBOARD_NAME = brand.APP_KEYBOARD_NAME;
+
   const catalogs = {
     'zh-CN': {
-      appName: 'Typephone',
+      appName: APP_NAME,
       navControl: '控制方式',
       navDiagnostics: '诊断',
       navSettings: '设置',
@@ -17,7 +22,7 @@
       statusUnknown: '状态未知',
       statusOffline: '离线',
       statusConnected: '已连接',
-      statusAdvertising: '广播中',
+      statusAdvertising: '等待配对',
       statusError: '异常',
       statusDisconnected: '未连接',
       statusMirroring: '镜像中',
@@ -31,13 +36,13 @@
       connExclusiveDetail: 'Mac 本地按键已暂停 · ⌃⌥⌘Esc 紧急退出',
       connMirrorDetail: '选择镜像或独占模式后即可转发物理键盘',
       connAdvertisingTitle: '等待 iPhone 配对',
-      connAdvertisingDetail: '在 iPhone「设置 → 蓝牙」中选择 Typephone Keyboard',
+      connAdvertisingDetail: `在 iPhone「设置 → 蓝牙」中选择 ${APP_KEYBOARD_NAME}`,
       connErrorTitle: '蓝牙服务启动失败',
       connErrorDetail: '请到「诊断」页查看详情后重试',
-      connIdleTitle: '尚未开始广播',
-      connIdleDetail: '开始广播后，iPhone 才能发现这台 Mac',
-      btnStartAdvertise: '开始广播',
-      btnStopAdvertise: '停止广播',
+      connIdleTitle: '尚未开始等待配对',
+      connIdleDetail: '开始等待后，iPhone 才能发现这台 Mac',
+      btnStartAdvertise: '开始等待配对',
+      btnStopAdvertise: '停止等待配对',
       btnRetry: '重新尝试',
 
       permEyebrow: '需要系统权限',
@@ -60,20 +65,20 @@
       btnSendA: '发送 “a” 到 iPhone',
 
       helpTitle: '遇到问题？',
-      helpHint: '点击展开帮助与故障排查',
-      help1: '在 iPhone 蓝牙设置中忽略旧的 Typephone Keyboard。',
-      help2: '点击「重新广播」，等待设备重新出现。',
-      help3: '完成配对后打开备忘录测试。',
-      help4: '若仍失败，到「诊断」页导出诊断 JSON。',
+      helpHint: '展开故障排查步骤',
+      help1: `在 iPhone「设置 → 蓝牙」中忽略旧的 ${APP_KEYBOARD_NAME}`,
+      help2: '在诊断页点击「重新等待配对」，等待设备重新出现',
+      help3: '配对成功后，在 iPhone 备忘录中试打字',
+      help4: '若仍失败，到「诊断」页导出诊断 JSON',
 
-      btnRestart: '重新广播',
+      btnRestart: '重新等待配对',
       btnExport: '导出诊断 JSON',
       lastUpdated: '最近更新',
       healthOk: '运行正常',
       healthWarn: '需要检查',
 
       diagBluetooth: 'Bluetooth',
-      diagAdvertising: '广播',
+      diagAdvertising: '等待配对',
       diagHid: 'HID Service',
       diagRouting: '输入模式',
       diagListen: '输入监控',
@@ -118,7 +123,7 @@
       toastBackendOffline: '原生 BLE 服务未启动'
     },
     en: {
-      appName: 'Typephone',
+      appName: APP_NAME,
       navControl: 'Control',
       navDiagnostics: 'Diagnostics',
       navSettings: 'Settings',
@@ -144,7 +149,7 @@
       connExclusiveDetail: 'Mac keys paused · ⌃⌥⌘Esc emergency exit',
       connMirrorDetail: 'Pick Mirror or Exclusive to forward the keyboard',
       connAdvertisingTitle: 'Waiting for iPhone',
-      connAdvertisingDetail: 'On iPhone, open Settings → Bluetooth and choose Typephone Keyboard',
+      connAdvertisingDetail: `On iPhone, open Settings → Bluetooth and choose ${APP_KEYBOARD_NAME}`,
       connErrorTitle: 'Bluetooth failed to start',
       connErrorDetail: 'Check Diagnostics, then try again',
       connIdleTitle: 'Not advertising yet',
@@ -173,11 +178,11 @@
       btnSendA: 'Send “a” to iPhone',
 
       helpTitle: 'Having trouble?',
-      helpHint: 'Expand for pairing tips',
-      help1: 'Forget the old Typephone Keyboard in iPhone Bluetooth settings.',
-      help2: 'Tap Restart advertising and wait for the device to reappear.',
-      help3: 'After pairing, open Notes and try typing.',
-      help4: 'If it still fails, export diagnostics JSON from Diagnostics.',
+      helpHint: 'Expand troubleshooting steps',
+      help1: `Forget the old ${APP_KEYBOARD_NAME} in iPhone Settings → Bluetooth`,
+      help2: 'In Diagnostics, tap Restart waiting, then wait for the device',
+      help3: 'After pairing, open Notes on iPhone and try typing',
+      help4: 'If it still fails, export diagnostics JSON from Diagnostics',
 
       btnRestart: 'Restart advertising',
       btnExport: 'Export diagnostics JSON',
