@@ -143,8 +143,20 @@ final class ControlServer {
             response["exportedPath"] = state.exportDiagnostics()?.path ?? NSNull()
             send(response, on: connection)
         case "shutdown":
-            sendStatus(on: connection)
-            DispatchQueue.main.async { NSApp.terminate(nil) }
+            // Tear down BLE, event taps, and the control plane before the process exits
+            // so Electron quit never leaves a helper spinning on CPU/RAM.
+            state?.shutdown()
+            stop()
+            send(["type": "status", "status": "shuttingDown", "statusText": "正在退出"], on: connection)
+            DispatchQueue.main.async {
+                NSApp.terminate(nil)
+                // Helper mode: hard-exit fallback if terminate is delayed/blocked.
+                if CommandLine.arguments.contains("--electron-helper") {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        exit(0)
+                    }
+                }
+            }
         default:
             send(["type": "error", "message": "Unknown command: \(command)"], on: connection)
         }

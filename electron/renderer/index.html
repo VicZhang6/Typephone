@@ -5,89 +5,233 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'" />
     <title>Mac Input</title>
+    <link rel="stylesheet" href="scrollbars.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <header class="topbar">
-        <div class="brand-lockup">
-          <div class="brand-icon" aria-hidden="true">
-            <svg viewBox="0 0 44 44" fill="none"><rect x="7" y="12" width="30" height="20" rx="5" stroke="currentColor" stroke-width="2.5"/><path d="M12 17h3v3h-3zm6 0h3v3h-3zm6 0h3v3h-3zm6 0h3v3h-3zM12 23h3v3h-3zm6 0h3v3h-3zm6 0h9v3h-9z" fill="currentColor"/></svg>
-          </div>
-          <div>
-            <h1>Mac Input</h1>
-            <p class="lede">将这台 Mac 变成 iPhone 的蓝牙硬件键盘。</p>
+    <!-- macOS hiddenInset: top strip is window-draggable (traffic lights stay clickable). -->
+    <div class="titlebar-drag-region" aria-hidden="true"></div>
+    <div class="app-frame">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-copy">
+            <strong>Mac Input</strong>
+            <span>BLE 键盘</span>
           </div>
         </div>
-        <div class="status-pill" id="status-pill"><span class="status-dot" aria-hidden="true"></span><span id="status-text">正在连接原生服务</span></div>
-      </header>
 
-      <section class="connection-card">
-        <div class="connection-icon phone-icon" aria-hidden="true">
-          <svg viewBox="0 0 42 42" fill="none"><rect x="13" y="5" width="16" height="32" rx="4" stroke="currentColor" stroke-width="2.3"/><path d="M18 9h6M19 32h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <div class="connection-copy">
-          <h2 id="connection-title">等待 Mac Input Keyboard</h2>
-          <p id="connection-detail">请在 iPhone 的“设置 → 蓝牙”中选择 Mac Input Keyboard。</p>
-        </div>
-        <button class="primary-button" id="advertise-button">开始广播</button>
-      </section>
+        <nav class="sidebar-nav" role="tablist" aria-label="页面">
+          <button
+            class="nav-item is-active"
+            type="button"
+            role="tab"
+            id="nav-control"
+            data-view="control"
+            aria-selected="true"
+            aria-controls="view-control"
+          >
+            <span class="nav-icon" aria-hidden="true"><span class="hi" data-icon="adjustments-horizontal"></span></span>
+            <span class="nav-label">控制方式</span>
+          </button>
+          <button
+            class="nav-item"
+            type="button"
+            role="tab"
+            id="nav-diagnostics"
+            data-view="diagnostics"
+            aria-selected="false"
+            aria-controls="view-diagnostics"
+          >
+            <span class="nav-icon" aria-hidden="true"><span class="hi" data-icon="chart-bar"></span></span>
+            <span class="nav-label">诊断</span>
+          </button>
+        </nav>
 
-      <section class="permission-banner" id="permission-banner" hidden>
-        <div><p class="eyebrow">需要系统权限</p><h2>允许键盘捕获与独占输入</h2><p>镜像模式需要“输入监控”，独占模式还需要“辅助功能”。授权后请返回这里重试。</p></div>
-        <div class="permission-actions"><button class="secondary-button compact-button" id="request-permissions">请求权限</button><button class="quiet-button" id="open-input-settings">输入监控设置</button><button class="quiet-button" id="open-accessibility-settings">辅助功能设置</button></div>
-      </section>
-
-      <section class="main-grid">
-        <div class="workflow-card">
-          <div class="section-heading">
-            <div><p class="eyebrow">输入模式</p><h2>选择键盘输入如何发送到 iPhone。</h2></div>
+        <div class="sidebar-footer">
+          <div class="status-pill compact" id="status-pill">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="status-text">正在连接原生服务</span>
           </div>
-          <div class="mode-grid" role="radiogroup" aria-label="输入模式">
-            <button class="mode-card" data-mode="off" role="radio" aria-checked="true">
-              <span class="mode-radio"></span><span class="mode-icon muted-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><rect x="5" y="9" width="22" height="14" rx="4" stroke="currentColor" stroke-width="2"/><path d="m8 7 16 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><span class="mode-copy"><strong>关闭</strong><small>按键只留在 Mac</small></span>
-            </button>
-            <button class="mode-card" data-mode="mirror" role="radio" aria-checked="false">
-              <span class="mode-radio"></span><span class="mode-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="17" height="13" rx="3" stroke="currentColor" stroke-width="2"/><rect x="12" y="12" width="16" height="13" rx="3" fill="var(--panel)" stroke="currentColor" stroke-width="2"/></svg></span><span class="mode-copy"><strong>镜像输入</strong><small>Mac 和 iPhone 同时接收</small></span>
-            </button>
-            <button class="mode-card" data-mode="exclusive" role="radio" aria-checked="false">
-              <span class="mode-radio"></span><span class="mode-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><rect x="10" y="4" width="12" height="24" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="24" r="1.2" fill="currentColor"/></svg></span><span class="mode-copy"><strong>独占输入</strong><small>按键只发送到 iPhone</small></span>
-            </button>
-          </div>
-          <div class="emergency-note"><span class="shortcut">⌃⌥⌘Esc</span><span>紧急快捷键始终退出独占模式并释放所有按键。</span></div>
-
-          <div class="test-panel">
-            <div class="test-copy"><p class="eyebrow">连接验证</p><h2>发送一个测试按键</h2><p>iPhone 连接并打开输入框后，发送 A down → A up。</p></div>
-            <div class="keycap" aria-hidden="true">A</div>
-            <button class="test-button" id="send-a-button" disabled><span>›</span>发送 “a” 到 iPhone</button>
-          </div>
-
-          <details class="pairing-guide"><summary><span class="help-mark">?</span><span><strong>遇到问题？</strong><small>点击展开帮助与故障排查</small></span><span class="chevron">⌄</span></summary><ol><li>在 iPhone 蓝牙设置中忽略旧的 Mac Input Keyboard。</li><li>点击“重新广播”，等待设备重新出现。</li><li>完成配对后打开备忘录测试。</li><li>若仍失败，导出右侧诊断 JSON。</li></ol></details>
         </div>
+      </aside>
 
-        <aside class="diagnostics-card">
-          <div class="diagnostics-heading"><span class="pulse-icon" aria-hidden="true"><svg viewBox="0 0 34 24" fill="none"><path d="M2 13h6l3-8 5 16 4-11 3 7h9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p class="eyebrow">实时诊断</p></div>
-          <dl>
-            <div><dt><span class="diag-icon bluetooth">ᛒ</span>Bluetooth</dt><dd id="bluetooth-state">—</dd></div>
-            <div><dt><span class="diag-icon radio">◉</span>广播</dt><dd id="advertising-state">否</dd></div>
-            <div><dt><span class="diag-icon service">▣</span>HID Service</dt><dd id="hid-service">未添加</dd></div>
-            <div><dt><span class="diag-icon keyboard">⌨</span>输入模式</dt><dd id="routing-mode">关闭</dd></div>
-            <div><dt><span class="diag-icon eye">◉</span>输入监控</dt><dd id="listen-access">缺失</dd></div>
-            <div><dt><span class="diag-icon access">♙</span>辅助功能</dt><dd id="accessibility-access">缺失</dd></div>
-            <div><dt><span class="diag-icon queue">▱</span>发送队列</dt><dd id="queue-depth">0</dd></div>
-            <div class="diagnostic-extra"><dt>原生服务</dt><dd id="native-service">检查中</dd></div>
-            <div class="diagnostic-extra"><dt>iPhone 订阅</dt><dd id="subscription">否</dd></div>
-            <div class="diagnostic-extra"><dt>Event Tap</dt><dd id="capture-state">未运行</dd></div>
-            <div class="diagnostic-extra"><dt>Caps Lock</dt><dd id="caps-lock">关</dd></div>
-            <div class="report-row diagnostic-extra"><dt>最近报告</dt><dd id="last-report">—</dd></div>
-          </dl>
-          <div class="diagnostics-footer"><span>最近报告 <time id="diagnostic-time">—</time></span><span class="healthy" id="diagnostic-health"><i></i>运行正常</span></div>
-          <div class="diagnostic-actions"><button class="quiet-button" id="restart-button">重新广播</button><button class="quiet-button" id="export-button">导出诊断 JSON</button></div>
-        </aside>
-      </section>
+      <div class="workspace">
+        <header class="workspace-header">
+          <h1 id="page-title">控制方式</h1>
+        </header>
 
-      <footer><span>Electron 菜单栏界面</span><span>Swift · CoreBluetooth · CGEventTap · BLE HOGP</span></footer>
-    </main>
+        <main class="workspace-main">
+          <!-- Control (home) -->
+          <section
+            class="view is-active"
+            id="view-control"
+            role="tabpanel"
+            aria-labelledby="nav-control"
+            data-view-panel="control"
+          >
+            <section class="connection-card" id="connection-card" data-state="idle">
+              <div class="connection-main">
+                <div class="connection-icon" aria-hidden="true">
+                  <span class="hi" data-icon="device-phone-mobile"></span>
+                  <span class="connection-live" aria-hidden="true"></span>
+                </div>
+                <div class="connection-copy">
+                  <div class="connection-title-row">
+                    <h2 id="connection-title">等待 Mac Input Keyboard</h2>
+                    <span class="connection-badge" id="connection-badge">未连接</span>
+                  </div>
+                  <p id="connection-detail">请在 iPhone 的“设置 → 蓝牙”中选择 Mac Input Keyboard。</p>
+                </div>
+              </div>
+              <button class="primary-button connection-action" id="advertise-button" type="button">开始广播</button>
+            </section>
+
+            <section class="permission-banner" id="permission-banner" hidden>
+              <div>
+                <p class="eyebrow">需要系统权限</p>
+                <h2>允许键盘捕获与独占输入</h2>
+                <p>镜像模式需要“输入监控”，独占模式还需要“辅助功能”。授权后请返回这里重试。</p>
+              </div>
+              <div class="permission-actions">
+                <button class="secondary-button compact-button" id="request-permissions" type="button">请求权限</button>
+                <button class="quiet-button" id="open-input-settings" type="button">输入监控设置</button>
+                <button class="quiet-button" id="open-accessibility-settings" type="button">辅助功能设置</button>
+              </div>
+            </section>
+
+            <section class="workflow-card">
+              <div class="mode-grid" role="radiogroup" aria-label="输入模式">
+                <button class="mode-card" data-mode="off" role="radio" aria-checked="true" type="button">
+                  <span class="mode-radio"></span>
+                  <span class="mode-icon muted-icon" aria-hidden="true"><span class="hi" data-icon="no-symbol"></span></span>
+                  <span class="mode-copy"><strong>关闭</strong><small>按键只留在 Mac</small></span>
+                </button>
+                <button class="mode-card" data-mode="mirror" role="radio" aria-checked="false" type="button">
+                  <span class="mode-radio"></span>
+                  <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="square-2-stack"></span></span>
+                  <span class="mode-copy"><strong>镜像输入</strong><small>Mac 和 iPhone 同时接收</small></span>
+                </button>
+                <button class="mode-card" data-mode="exclusive" role="radio" aria-checked="false" type="button">
+                  <span class="mode-radio"></span>
+                  <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="device-phone-mobile"></span></span>
+                  <span class="mode-copy"><strong>独占输入</strong><small>按键只发送到 iPhone</small></span>
+                </button>
+              </div>
+              <div class="emergency-note">
+                <span class="shortcut">⌃⌥⌘Esc</span>
+                <span>紧急快捷键始终退出独占模式并释放所有按键。</span>
+              </div>
+
+              <div class="test-panel">
+                <div class="test-copy">
+                  <p>iPhone 连接并打开输入框后，发送 A down → A up。</p>
+                </div>
+                <div class="keycap" aria-hidden="true">A</div>
+                <button class="test-button" id="send-a-button" type="button" disabled>
+                  <span class="hi hi-sm" data-icon="chevron-right" aria-hidden="true"></span>
+                  发送 “a” 到 iPhone
+                </button>
+              </div>
+
+              <details class="pairing-guide">
+                <summary>
+                  <span class="help-mark" aria-hidden="true"><span class="hi hi-sm" data-icon="question-mark-circle"></span></span>
+                  <span><strong>遇到问题？</strong><small>点击展开帮助与故障排查</small></span>
+                  <span class="chevron" aria-hidden="true"><span class="hi hi-sm" data-icon="chevron-down"></span></span>
+                </summary>
+                <ol>
+                  <li>在 iPhone 蓝牙设置中忽略旧的 Mac Input Keyboard。</li>
+                  <li>点击“重新广播”，等待设备重新出现。</li>
+                  <li>完成配对后打开备忘录测试。</li>
+                  <li>若仍失败，到「诊断」页导出诊断 JSON。</li>
+                </ol>
+              </details>
+            </section>
+          </section>
+
+          <!-- Diagnostics -->
+          <section
+            class="view"
+            id="view-diagnostics"
+            role="tabpanel"
+            aria-labelledby="nav-diagnostics"
+            data-view-panel="diagnostics"
+            hidden
+          >
+            <section class="diagnostics-page">
+              <div class="diagnostics-toolbar">
+                <div class="diagnostic-actions">
+                  <button class="secondary-button" id="restart-button" type="button">重新广播</button>
+                  <button class="primary-button compact-primary" id="export-button" type="button">导出诊断 JSON</button>
+                </div>
+              </div>
+
+              <div class="diagnostics-meta">
+                <span>最近更新 <time id="diagnostic-time">—</time></span>
+                <span class="healthy" id="diagnostic-health"><i></i>运行正常</span>
+              </div>
+
+              <div class="diagnostics-grid">
+                <dl class="diag-list">
+                  <div>
+                    <dt><span class="diag-icon tone-blue" aria-hidden="true"><span class="hi hi-sm" data-icon="signal"></span></span>Bluetooth</dt>
+                    <dd id="bluetooth-state">—</dd>
+                  </div>
+                  <div>
+                    <dt><span class="diag-icon tone-green" aria-hidden="true"><span class="hi hi-sm" data-icon="wifi"></span></span>广播</dt>
+                    <dd id="advertising-state">否</dd>
+                  </div>
+                  <div>
+                    <dt><span class="diag-icon tone-purple" aria-hidden="true"><span class="hi hi-sm" data-icon="cpu-chip"></span></span>HID Service</dt>
+                    <dd id="hid-service">未添加</dd>
+                  </div>
+                  <div>
+                    <dt><span class="diag-icon tone-amber" aria-hidden="true"><span class="hi hi-sm" data-icon="command-line"></span></span>输入模式</dt>
+                    <dd id="routing-mode">关闭</dd>
+                  </div>
+                  <div>
+                    <dt><span class="diag-icon tone-blue" aria-hidden="true"><span class="hi hi-sm" data-icon="eye"></span></span>输入监控</dt>
+                    <dd id="listen-access">缺失</dd>
+                  </div>
+                  <div>
+                    <dt><span class="diag-icon tone-violet" aria-hidden="true"><span class="hi hi-sm" data-icon="shield-check"></span></span>辅助功能</dt>
+                    <dd id="accessibility-access">缺失</dd>
+                  </div>
+                  <div>
+                    <dt><span class="diag-icon tone-blue" aria-hidden="true"><span class="hi hi-sm" data-icon="queue-list"></span></span>发送队列</dt>
+                    <dd id="queue-depth">0</dd>
+                  </div>
+                </dl>
+
+                <dl class="diag-list">
+                  <div>
+                    <dt>原生服务</dt>
+                    <dd id="native-service">检查中</dd>
+                  </div>
+                  <div>
+                    <dt>iPhone 订阅</dt>
+                    <dd id="subscription">否</dd>
+                  </div>
+                  <div>
+                    <dt>Event Tap</dt>
+                    <dd id="capture-state">未运行</dd>
+                  </div>
+                  <div>
+                    <dt>Caps Lock</dt>
+                    <dd id="caps-lock">关</dd>
+                  </div>
+                  <div class="report-row">
+                    <dt>最近报告</dt>
+                    <dd id="last-report">—</dd>
+                  </div>
+                </dl>
+              </div>
+            </section>
+          </section>
+        </main>
+      </div>
+    </div>
+
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script src="app.js"></script>
   </body>

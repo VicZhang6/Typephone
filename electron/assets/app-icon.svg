@@ -1,17 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <rect width="1024" height="1024" rx="224" fill="#F3F0E8"/>
-  <rect x="176" y="274" width="672" height="476" rx="88" fill="#25231F"/>
-  <g fill="#F3F0E8">
-    <rect x="250" y="364" width="86" height="72" rx="16"/>
-    <rect x="360" y="364" width="86" height="72" rx="16"/>
-    <rect x="470" y="364" width="86" height="72" rx="16"/>
-    <rect x="580" y="364" width="86" height="72" rx="16"/>
-    <rect x="690" y="364" width="86" height="72" rx="16"/>
-    <rect x="250" y="462" width="86" height="72" rx="16"/>
-    <rect x="360" y="462" width="86" height="72" rx="16"/>
-    <rect x="470" y="462" width="86" height="72" rx="16"/>
-    <rect x="580" y="462" width="196" height="72" rx="16"/>
-    <rect x="250" y="560" width="526" height="88" rx="20"/>
+  <g transform="translate(192 192) scale(26.6666667)" fill="none">
+    <path stroke="#25231F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="m6.75 7.5 3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z"/>
   </g>
-  <circle cx="812" cy="230" r="58" fill="#B95F24"/>
+  <circle cx="812" cy="230" r="58" fill="#E15B35"/>
 </svg>

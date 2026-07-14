@@ -16,8 +16,9 @@
     "dist:dir": "npm run build:native:release && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dir"
   },
   "devDependencies": {
-    "electron": "^37.0.0",
-    "electron-builder": "^26.0.12"
+    "electron": "^43.1.0",
+    "electron-builder": "^26.0.12",
+    "heroicons": "^2.2.0"
   },
   "build": {
     "appId": "com.viczhang.macinput.electron",
@@ -35,7 +36,9 @@
     "mac": {
       "category": "public.app-category.utilities",
       "minimumSystemVersion": "13.0",
-      "target": ["dir"],
+      "target": [
+        "dir"
+      ],
       "icon": "electron/assets/app-icon.icns",
       "hardenedRuntime": false
     }
