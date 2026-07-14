@@ -20,7 +20,7 @@ enum BLEStatus: Equatable {
 final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeripheralManagerDelegate {
 
     /// Advertised device name shown in iOS Bluetooth settings.
-    static let deviceName = "Mac Input Keyboard"
+    static let deviceName = "Typephone Keyboard"
 
     @Published private(set) var status: BLEStatus = .unknown
     @Published private(set) var isSubscribed = false

@@ -9,7 +9,7 @@ final class DiagnosticsRecorder {
         let message: String
     }
 
-    private let logger = Logger(subsystem: "com.viczhang.macinput", category: "diagnostics")
+    private let logger = Logger(subsystem: "com.viczhang.typephone", category: "diagnostics")
     private var entries: [Entry] = []
     private let maxEntries = 500
 
@@ -44,7 +44,7 @@ final class DiagnosticsRecorder {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd-HHmmss"
-        let filename = "MacInput-Diagnostics-\(formatter.string(from: Date())).json"
+        let filename = "Typephone-Diagnostics-\(formatter.string(from: Date())).json"
         let url = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
             .appendingPathComponent(filename)
         do {

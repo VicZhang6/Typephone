@@ -4,22 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'" />
-    <title>Mac Input</title>
+    <title>Typephone</title>
     <link rel="stylesheet" href="scrollbars.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <!-- macOS hiddenInset: top strip is window-draggable (traffic lights stay clickable). -->
     <div class="titlebar-drag-region" aria-hidden="true"></div>
     <div class="app-frame">
-      <aside class="sidebar" aria-label="主导航">
+      <aside class="sidebar" aria-label="Main">
         <div class="sidebar-brand">
           <div class="sidebar-brand-copy">
-            <strong>Type to Phone</strong>
+            <strong data-i18n="appName">Typephone</strong>
           </div>
         </div>
 
-        <nav class="sidebar-nav" role="tablist" aria-label="页面">
+        <nav class="sidebar-nav" role="tablist" aria-label="Pages">
           <button
             class="nav-item is-active"
             type="button"
@@ -30,7 +29,7 @@
             aria-controls="view-control"
           >
             <span class="nav-icon" aria-hidden="true"><span class="hi" data-icon="adjustments-horizontal"></span></span>
-            <span class="nav-label">控制方式</span>
+            <span class="nav-label" data-i18n="navControl">控制方式</span>
           </button>
           <button
             class="nav-item"
@@ -42,25 +41,36 @@
             aria-controls="view-diagnostics"
           >
             <span class="nav-icon" aria-hidden="true"><span class="hi" data-icon="chart-bar"></span></span>
-            <span class="nav-label">诊断</span>
+            <span class="nav-label" data-i18n="navDiagnostics">诊断</span>
+          </button>
+          <button
+            class="nav-item"
+            type="button"
+            role="tab"
+            id="nav-settings"
+            data-view="settings"
+            aria-selected="false"
+            aria-controls="view-settings"
+          >
+            <span class="nav-icon" aria-hidden="true"><span class="hi" data-icon="cog-6-tooth"></span></span>
+            <span class="nav-label" data-i18n="navSettings">设置</span>
           </button>
         </nav>
 
         <div class="sidebar-footer">
           <div class="status-pill compact" id="status-pill">
             <span class="status-dot" aria-hidden="true"></span>
-            <span id="status-text">正在连接原生服务</span>
+            <span id="status-text" data-i18n="statusConnecting">正在连接原生服务</span>
           </div>
         </div>
       </aside>
 
       <div class="workspace">
         <header class="workspace-header">
-          <h1 id="page-title">控制方式</h1>
+          <h1 id="page-title" data-i18n="pageControl">控制方式</h1>
         </header>
 
         <main class="workspace-main">
-          <!-- Control (home) -->
           <section
             class="view is-active"
             id="view-control"
@@ -76,79 +86,79 @@
                 </div>
                 <div class="connection-copy">
                   <div class="connection-title-row">
-                    <h2 id="connection-title">等待 Mac Input Keyboard</h2>
-                    <span class="connection-badge" id="connection-badge">未连接</span>
+                    <h2 id="connection-title">—</h2>
+                    <span class="connection-badge" id="connection-badge">—</span>
                   </div>
-                  <p id="connection-detail">请在 iPhone 的“设置 → 蓝牙”中选择 Mac Input Keyboard。</p>
+                  <p id="connection-detail">—</p>
                 </div>
               </div>
-              <button class="primary-button connection-action" id="advertise-button" type="button">开始广播</button>
+              <button class="primary-button connection-action" id="advertise-button" type="button">—</button>
             </section>
 
             <section class="permission-banner" id="permission-banner" hidden>
               <div>
-                <p class="eyebrow">需要系统权限</p>
-                <h2>允许键盘捕获与独占输入</h2>
-                <p>镜像模式需要“输入监控”，独占模式还需要“辅助功能”。授权后请返回这里重试。</p>
+                <p class="eyebrow" data-i18n="permEyebrow">需要系统权限</p>
+                <h2 data-i18n="permTitle">允许键盘捕获与独占输入</h2>
+                <p data-i18n="permBody">镜像模式需要「输入监控」，独占模式还需要「辅助功能」。授权后请返回这里重试。</p>
               </div>
               <div class="permission-actions">
-                <button class="secondary-button compact-button" id="request-permissions" type="button">请求权限</button>
-                <button class="quiet-button" id="open-input-settings" type="button">输入监控设置</button>
-                <button class="quiet-button" id="open-accessibility-settings" type="button">辅助功能设置</button>
+                <button class="secondary-button compact-button" id="request-permissions" type="button" data-i18n="btnRequestPermissions">请求权限</button>
+                <button class="quiet-button" id="open-input-settings" type="button" data-i18n="btnOpenInputSettings">输入监控设置</button>
+                <button class="quiet-button" id="open-accessibility-settings" type="button" data-i18n="btnOpenAccessibility">辅助功能设置</button>
               </div>
             </section>
 
             <section class="workflow-card">
-              <div class="mode-grid" role="radiogroup" aria-label="输入模式">
+              <div class="mode-grid" role="radiogroup" aria-label="Input mode" data-i18n-aria="modeGroupLabel">
                 <button class="mode-card" data-mode="off" role="radio" aria-checked="true" type="button">
                   <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="signal-slash"></span></span>
-                  <span class="mode-copy"><strong>关闭</strong><small>按键只留在 Mac</small></span>
+                  <span class="mode-copy"><strong data-i18n="modeOff">关闭</strong><small data-i18n="modeOffDetail">按键只留在 Mac</small></span>
                   <span class="mode-check" aria-hidden="true"><span class="hi" data-icon="check"></span></span>
                 </button>
                 <button class="mode-card" data-mode="mirror" role="radio" aria-checked="false" type="button">
                   <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="device-phone-mobile"></span></span>
-                  <span class="mode-copy"><strong>镜像输入</strong><small>Mac 和 iPhone 同时接收</small></span>
+                  <span class="mode-copy"><strong data-i18n="modeMirror">镜像输入</strong><small data-i18n="modeMirrorDetail">Mac 和 iPhone 同时接收</small></span>
                   <span class="mode-check" aria-hidden="true"><span class="hi" data-icon="check"></span></span>
                 </button>
                 <button class="mode-card" data-mode="exclusive" role="radio" aria-checked="false" type="button">
                   <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="device-phone-mobile"></span></span>
-                  <span class="mode-copy"><strong>独占输入</strong><small>按键只发送到 iPhone</small></span>
+                  <span class="mode-copy"><strong data-i18n="modeExclusive">独占输入</strong><small data-i18n="modeExclusiveDetail">按键只发送到 iPhone</small></span>
                   <span class="mode-check" aria-hidden="true"><span class="hi" data-icon="check"></span></span>
                 </button>
               </div>
               <div class="emergency-note">
                 <span class="shortcut">⌃⌥⌘Esc</span>
-                <span>紧急快捷键始终退出独占模式并释放所有按键。</span>
+                <span data-i18n="emergencyNote">紧急快捷键始终退出独占模式并释放所有按键。</span>
               </div>
 
               <div class="test-panel">
                 <div class="test-copy">
-                  <p>iPhone 连接并打开输入框后，发送 A down → A up。</p>
+                  <p data-i18n="testHint">iPhone 连接并打开输入框后，发送 A down → A up。</p>
                 </div>
                 <div class="keycap" aria-hidden="true">A</div>
                 <button class="test-button" id="send-a-button" type="button" disabled>
                   <span class="hi hi-sm" data-icon="chevron-right" aria-hidden="true"></span>
-                  发送 “a” 到 iPhone
+                  <span data-i18n="btnSendA">发送 “a” 到 iPhone</span>
                 </button>
               </div>
 
               <details class="pairing-guide">
                 <summary>
-                  <span class="help-mark" aria-hidden="true"><span class="hi hi-sm" data-icon="question-mark-circle"></span></span>
-                  <span><strong>遇到问题？</strong><small>点击展开帮助与故障排查</small></span>
-                  <span class="chevron" aria-hidden="true"><span class="hi hi-sm" data-icon="chevron-down"></span></span>
+                  <span class="help-text">
+                    <strong data-i18n="helpTitle">遇到问题？</strong>
+                    <small data-i18n="helpHint">点击展开帮助与故障排查</small>
+                  </span>
                 </summary>
                 <ol>
-                  <li>在 iPhone 蓝牙设置中忽略旧的 Mac Input Keyboard。</li>
-                  <li>点击“重新广播”，等待设备重新出现。</li>
-                  <li>完成配对后打开备忘录测试。</li>
-                  <li>若仍失败，到「诊断」页导出诊断 JSON。</li>
+                  <li data-i18n="help1">在 iPhone 蓝牙设置中忽略旧的 Typephone Keyboard。</li>
+                  <li data-i18n="help2">点击「重新广播」，等待设备重新出现。</li>
+                  <li data-i18n="help3">完成配对后打开备忘录测试。</li>
+                  <li data-i18n="help4">若仍失败，到「诊断」页导出诊断 JSON。</li>
                 </ol>
               </details>
             </section>
           </section>
 
-          <!-- Diagnostics -->
           <section
             class="view"
             id="view-diagnostics"
@@ -160,67 +170,98 @@
             <section class="diagnostics-page">
               <div class="diagnostics-toolbar">
                 <div class="diagnostic-actions">
-                  <button class="secondary-button" id="restart-button" type="button">重新广播</button>
-                  <button class="primary-button compact-primary" id="export-button" type="button">导出诊断 JSON</button>
+                  <button class="secondary-button" id="restart-button" type="button" data-i18n="btnRestart">重新广播</button>
+                  <button class="primary-button compact-primary" id="export-button" type="button" data-i18n="btnExport">导出诊断 JSON</button>
                 </div>
               </div>
 
               <div class="diagnostics-meta">
-                <span>最近更新 <time id="diagnostic-time">—</time></span>
-                <span class="healthy" id="diagnostic-health"><i></i>运行正常</span>
+                <span><span data-i18n="lastUpdated">最近更新</span> <time id="diagnostic-time">—</time></span>
+                <span class="healthy" id="diagnostic-health"><i></i><span id="diagnostic-health-label">运行正常</span></span>
               </div>
 
               <div class="diagnostics-grid">
                 <dl class="diag-list">
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="signal"></span></span>Bluetooth</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="signal"></span></span><span data-i18n="diagBluetooth">Bluetooth</span></dt>
                     <dd id="bluetooth-state">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="wifi"></span></span>广播</dt>
-                    <dd id="advertising-state">否</dd>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="wifi"></span></span><span data-i18n="diagAdvertising">广播</span></dt>
+                    <dd id="advertising-state">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="cpu-chip"></span></span>HID Service</dt>
-                    <dd id="hid-service">未添加</dd>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="cpu-chip"></span></span><span data-i18n="diagHid">HID Service</span></dt>
+                    <dd id="hid-service">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="command-line"></span></span>输入模式</dt>
-                    <dd id="routing-mode">关闭</dd>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="command-line"></span></span><span data-i18n="diagRouting">输入模式</span></dt>
+                    <dd id="routing-mode">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="eye"></span></span>输入监控</dt>
-                    <dd id="listen-access">缺失</dd>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="eye"></span></span><span data-i18n="diagListen">输入监控</span></dt>
+                    <dd id="listen-access">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="shield-check"></span></span>辅助功能</dt>
-                    <dd id="accessibility-access">缺失</dd>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="shield-check"></span></span><span data-i18n="diagAccessibility">辅助功能</span></dt>
+                    <dd id="accessibility-access">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="queue-list"></span></span>发送队列</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="queue-list"></span></span><span data-i18n="diagQueue">发送队列</span></dt>
                     <dd id="queue-depth">0</dd>
                   </div>
                   <div>
-                    <dt>原生服务</dt>
-                    <dd id="native-service">检查中</dd>
+                    <dt data-i18n="diagNative">原生服务</dt>
+                    <dd id="native-service">—</dd>
                   </div>
                   <div>
-                    <dt>iPhone 订阅</dt>
-                    <dd id="subscription">否</dd>
+                    <dt data-i18n="diagSubscription">iPhone 订阅</dt>
+                    <dd id="subscription">—</dd>
                   </div>
                   <div>
-                    <dt>Event Tap</dt>
-                    <dd id="capture-state">未运行</dd>
+                    <dt data-i18n="diagEventTap">Event Tap</dt>
+                    <dd id="capture-state">—</dd>
                   </div>
                   <div>
-                    <dt>Caps Lock</dt>
-                    <dd id="caps-lock">关</dd>
+                    <dt data-i18n="diagCaps">Caps Lock</dt>
+                    <dd id="caps-lock">—</dd>
                   </div>
                   <div class="report-row">
-                    <dt>最近报告</dt>
+                    <dt data-i18n="diagReport">最近报告</dt>
                     <dd id="last-report">—</dd>
                   </div>
                 </dl>
+              </div>
+            </section>
+          </section>
+
+          <section
+            class="view"
+            id="view-settings"
+            role="tabpanel"
+            aria-labelledby="nav-settings"
+            data-view-panel="settings"
+            hidden
+          >
+            <section class="settings-page">
+              <p class="settings-hint" data-i18n="settingsHint">主题与语言默认跟随系统，可在此覆盖。</p>
+              <div class="settings-list">
+                <label class="settings-row" for="setting-theme">
+                  <span class="settings-label" data-i18n="settingsTheme">主题</span>
+                  <select id="setting-theme" class="settings-select">
+                    <option value="system" data-i18n="themeSystem">跟随系统</option>
+                    <option value="light" data-i18n="themeLight">浅色</option>
+                    <option value="dark" data-i18n="themeDark">深色</option>
+                  </select>
+                </label>
+                <label class="settings-row" for="setting-language">
+                  <span class="settings-label" data-i18n="settingsLanguage">语言</span>
+                  <select id="setting-language" class="settings-select">
+                    <option value="system" data-i18n="langSystem">跟随系统</option>
+                    <option value="zh-CN" data-i18n="langZh">简体中文</option>
+                    <option value="en" data-i18n="langEn">English</option>
+                  </select>
+                </label>
               </div>
             </section>
           </section>
@@ -229,6 +270,8 @@
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script src="i18n.js"></script>
+    <script src="prefs.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

@@ -100,7 +100,7 @@ final class MenuBarController: NSObject {
 
         menu.addItem(.separator())
 
-        let quit = NSMenuItem(title: "退出 Mac Input", action: #selector(quit(_:)), keyEquivalent: "q")
+        let quit = NSMenuItem(title: "退出 Typephone", action: #selector(quit(_:)), keyEquivalent: "q")
         quit.target = self
         menu.addItem(quit)
 
@@ -137,7 +137,7 @@ final class MenuBarController: NSObject {
         iPhone Caps Lock：\(caps)
         """
         let alert = NSAlert()
-        alert.messageText = "Mac Input 诊断"
+        alert.messageText = "Typephone 诊断"
         alert.informativeText = msg
         alert.addButton(withTitle: "好")
         alert.runModal()

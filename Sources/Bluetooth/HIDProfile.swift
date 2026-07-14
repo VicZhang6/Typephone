@@ -183,7 +183,7 @@ enum HIDProfile {
         let manufacturer = CBMutableCharacteristic(
             type: manufacturerNameUUID,
             properties: [.read],
-            value: Data("Mac Input".utf8),
+            value: Data("Typephone".utf8),
             permissions: [.readable]
         )
         chars[.manufacturerName] = manufacturer
@@ -191,7 +191,7 @@ enum HIDProfile {
         let modelNumber = CBMutableCharacteristic(
             type: modelNumberUUID,
             properties: [.read],
-            value: Data("MacInput-0.1".utf8),
+            value: Data("Typephone-0.1".utf8),
             permissions: [.readable]
         )
         chars[.modelNumber] = modelNumber

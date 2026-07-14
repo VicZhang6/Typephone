@@ -1,8 +1,8 @@
 {
-  "name": "type-to-phone",
+  "name": "typephone",
   "version": "0.1.0",
   "private": true,
-  "description": "Electron control surface for the native Mac Input BLE HID service",
+  "description": "Typephone — turn your Mac into a BLE HID keyboard for iPhone/iPad",
   "author": "Vic Zhang",
   "main": "electron/main.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "heroicons": "^2.2.0"
   },
   "build": {
-    "appId": "com.viczhang.macinput.electron",
-    "productName": "Mac Input",
+    "appId": "com.viczhang.typephone.electron",
+    "productName": "Typephone",
     "files": [
       "electron/**/*",
       "package.json"

@@ -222,7 +222,7 @@ function launchNativeBackend() {
   const nativeApp = resolveNativeAppPath();
   const binary = resolveNativeBinary(nativeApp);
   if (!fs.existsSync(binary)) {
-    console.warn(`[type-to-phone] Native helper not found: ${binary}`);
+    console.warn(`[typephone] Native helper not found: ${binary}`);
     return;
   }
 
@@ -246,11 +246,11 @@ function launchNativeBackend() {
       nativeHelperPid = null;
     }
     if (code || signal) {
-      console.warn(`[type-to-phone] Native helper exited code=${code} signal=${signal}`);
+      console.warn(`[typephone] Native helper exited code=${code} signal=${signal}`);
     }
   });
   child.once('error', (error) => {
-    console.warn('[type-to-phone] Failed to launch native helper:', error.message);
+    console.warn('[typephone] Failed to launch native helper:', error.message);
     if (nativeHelper === child) {
       nativeHelper = null;
       nativeHelperPid = null;
@@ -366,7 +366,7 @@ function buildTrayMenu(status) {
     : (status.isAdvertising ? '正在广播，等待 iPhone' : '未广播');
 
   return Menu.buildFromTemplate([
-    { label: status.statusText || 'Mac Input', enabled: false },
+    { label: status.statusText || 'Typephone', enabled: false },
     { label: line2, enabled: false },
     { type: 'separator' },
     { label: '显示窗口', click: () => showMainWindow() },
@@ -410,7 +410,7 @@ function buildTrayMenu(status) {
     },
     { type: 'separator' },
     {
-      label: '退出 Mac Input',
+      label: '退出 Typephone',
       click: () => {
         isQuitting = true;
         app.quit();
@@ -432,7 +432,7 @@ function trayMenuKey(status) {
 
 function createTray() {
   tray = new Tray(trayIcon());
-  tray.setToolTip('Mac Input');
+  tray.setToolTip('Typephone');
   tray.setIgnoreDoubleClickEvents(true);
 
   // Left click: toggle control window.
@@ -452,8 +452,8 @@ function updateTray(status) {
   lastTrayStatus = status;
   const modeTitle = status.routingModeTitle || '关闭';
   const tip = status.statusText
-    ? `Mac Input · ${status.statusText} · ${modeTitle}`
-    : 'Mac Input';
+    ? `Typephone · ${status.statusText} · ${modeTitle}`
+    : 'Typephone';
   tray.setToolTip(tip);
 
   const key = trayMenuKey(status);
@@ -474,7 +474,7 @@ function createWindow() {
     minWidth: 860,
     minHeight: 680,
     show: false,
-    title: 'Mac Input',
+    title: 'Typephone',
     titleBarStyle: 'hiddenInset',
     // Allow CSS -webkit-app-region: drag on the custom title strip.
     trafficLightPosition: { x: 16, y: 18 },
@@ -511,6 +511,13 @@ function createWindow() {
     mainWindow = undefined;
   });
 }
+
+ipcMain.handle('app:set-theme-source', (_event, source) => {
+  const allowed = new Set(['system', 'light', 'dark']);
+  nativeTheme.themeSource = allowed.has(source) ? source : 'system';
+  applyWindowTheme();
+  return nativeTheme.themeSource;
+});
 
 ipcMain.handle('native:get-status', async () => {
   try {
@@ -599,7 +606,7 @@ app.on('window-all-closed', () => {
 function handleProcessSignal(signal) {
   if (isQuitting && nativeShutdownComplete) return;
   isQuitting = true;
-  console.warn(`[type-to-phone] Received ${signal}, stopping native helper…`);
+  console.warn(`[typephone] Received ${signal}, stopping native helper…`);
   killElectronHelpersSync();
   destroyUiShell();
   nativeShutdownComplete = true;

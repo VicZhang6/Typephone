@@ -1,10 +1,10 @@
-# Mac Input
+# Typephone
 
-Mac Input turns an Apple Silicon Mac into a BLE HID keyboard for an iPhone or iPad.
+Typephone turns an Apple Silicon Mac into a BLE HID keyboard for an iPhone or iPad.
 
 The product is an Electron application with a native Swift helper:
 
-- **Electron** owns the menu-bar tray, control window, permission guidance, routing controls, and diagnostics export.
+- **Electron** owns the menu-bar tray, control window, permission guidance, routing controls, settings, and diagnostics export.
 - **Swift** owns `CoreBluetooth`, the HOGP service tree, `CGEventTap`, Accessibility/Input Monitoring permissions, sleep/wake recovery, and the ordered HID report queue.
 
 Electron cannot expose macOS as a BLE peripheral by itself, so the native layer is required for real HID advertising. The two processes communicate over a newline-delimited JSON protocol on loopback TCP port `43821`.
@@ -26,7 +26,7 @@ Electron cannot expose macOS as a BLE peripheral by itself, so the native layer 
 - permission request links for Input Monitoring and Accessibility
 - diagnostic state: Bluetooth, service registration, advertising, central, subscriptions, queue depth, report bytes, LED state, permissions, capture mode, pressed keys
 - JSON diagnostic export to `~/Downloads`
-- Electron tray menu and control window
+- Electron tray menu, control window, settings (theme & language)
 - Swift unit tests for HID reports, key mapping, keyboard state, queue ordering, and 5,000 queued reports
 
 ## Run in development
@@ -56,9 +56,9 @@ Production distribution still requires signing/notarization and a real Apple Dev
 
 The code and local protocol are verified on this Mac, but the following require a real iPhone/iPad:
 
-1. Forget any stale `Mac Input Keyboard` entry on the phone.
+1. Forget any stale `Typephone Keyboard` entry on the phone.
 2. Start the app and allow Input Monitoring/Accessibility when enabling routing.
-3. In iPhone Settings → Bluetooth, pair `Mac Input Keyboard`.
+3. In iPhone Settings → Bluetooth, pair `Typephone Keyboard`.
 4. Open Notes and use **Send “a” to iPhone**.
 5. Verify mirror, exclusive, modifiers, long-press delete, Caps Lock LED feedback, sleep/wake, Bluetooth restart, and 5,000-key stress behavior.
 

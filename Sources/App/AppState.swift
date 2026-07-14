@@ -99,7 +99,7 @@ final class AppState: ObservableObject {
     }
 
     func start() {
-        diagnostics.record("Mac Input 启动")
+        diagnostics.record("Typephone 启动")
         connection.start()
     }
 
@@ -107,7 +107,7 @@ final class AppState: ObservableObject {
         routing.releaseAll()
         connection.stop()
         sleepWakeMonitor.stop()
-        diagnostics.record("Mac Input 退出")
+        diagnostics.record("Typephone 退出")
     }
 
     func toggleAdvertising() {
