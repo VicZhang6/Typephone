@@ -126,13 +126,15 @@
 
               <div class="test-panel">
                 <div class="test-copy">
-                  <p data-i18n="testHint">iPhone 连接并打开输入框后，发送 A down → A up。</p>
+                  <strong class="test-title" data-i18n="testTitle">测试输入</strong>
+                  <p data-i18n="testHint">连接 iPhone 并聚焦输入框后，点发送试打字母 A</p>
                 </div>
-                <div class="keycap" aria-hidden="true">A</div>
-                <button class="test-button" id="send-a-button" type="button" disabled>
-                  <span class="hi hi-sm" data-icon="chevron-right" aria-hidden="true"></span>
-                  <span data-i18n="btnSendA">发送 “a” 到 iPhone</span>
-                </button>
+                <div class="test-action-row">
+                  <div class="keycap" aria-hidden="true">A</div>
+                  <button class="test-button" id="send-a-button" type="button" disabled>
+                    <span data-i18n="btnSendA">发送 “a” 到 iPhone</span>
+                  </button>
+                </div>
               </div>
 
               <details class="pairing-guide">

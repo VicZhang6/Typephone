@@ -61,7 +61,8 @@
       modeGroupLabel: '输入模式',
       emergencyNote: '紧急快捷键始终退出独占模式并释放所有按键。',
 
-      testHint: 'iPhone 连接并打开输入框后，发送 A down → A up。',
+      testTitle: '测试输入',
+      testHint: '连接 iPhone 并聚焦输入框后，点发送试打字母 A',
       btnSendA: '发送 “a” 到 iPhone',
 
       helpTitle: '遇到问题？',
@@ -174,7 +175,8 @@
       modeGroupLabel: 'Input mode',
       emergencyNote: 'Emergency shortcut always exits exclusive mode and releases keys.',
 
-      testHint: 'With iPhone connected and a text field focused, send A down → A up.',
+      testTitle: 'Test input',
+      testHint: 'Connect iPhone, focus a text field, then send the letter A',
       btnSendA: 'Send “a” to iPhone',
 
       helpTitle: 'Having trouble?',

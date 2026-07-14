@@ -88,6 +88,13 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
             CBAdvertisementDataLocalNameKey: Self.deviceName
         ]
         manager.startAdvertising(advertisement)
+        // Keep an active HID subscription as "connected". Restarting
+        // advertising (wake / service re-add) must not look unpaired.
+        if isSubscribed {
+            if case .connected = status { return }
+            status = .connected(name: connectedCentralID)
+            return
+        }
         status = .advertising
     }
 
@@ -95,7 +102,9 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         wantsAdvertising = false
         manager.stopAdvertising()
         isAdvertising = false
-        if status == .advertising { status = .ready }
+        // Never demote an active subscription when the user only stops discovery.
+        if isSubscribed { return }
+        if case .advertising = status { status = .ready }
     }
 
     /// Send a keyboard input report to the subscribed Central.
@@ -217,11 +226,15 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
             status = .error("Advertising failed: \(error.localizedDescription)")
         }
         else {
-            // `connected` carries an associated value, so it cannot be
-            // compared with a bare enum case. Preserve the connected state
-            // if a stale advertising callback arrives after subscription.
-            if case .connected = status { return }
             isAdvertising = true
+            // Preserve connected / subscribed state if a late advertising
+            // callback arrives after the iPhone already subscribed to HID.
+            if isSubscribed {
+                if case .connected = status { return }
+                status = .connected(name: connectedCentralID)
+                return
+            }
+            if case .connected = status { return }
             status = .advertising
         }
     }

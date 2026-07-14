@@ -1192,55 +1192,82 @@ button:disabled {
   box-shadow: none;
 }
 
+/* Test input panel — outlined card aligned with connection strip */
 .test-panel {
-  display: grid;
-  grid-template-columns: 1fr 48px;
-  gap: var(--space-3) var(--space-4);
-  align-items: center;
-  padding: var(--space-4) 0;
-  border-top: 1px solid var(--ds-gray-400);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-4);
+  border: 1px solid var(--ds-gray-400);
+  border-radius: var(--radius-md);
+  background: transparent;
 }
-.test-copy p:last-child {
+.test-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.test-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -.28px;
+  color: var(--ink);
+}
+.test-copy p {
   margin: 0;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 18px;
+}
+.test-action-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
 }
 .keycap {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
+  flex: none;
   place-items: center;
   border: 1px solid var(--keycap-border);
-  border-bottom: 2px solid var(--keycap-border-b);
-  border-radius: var(--radius-sm);
+  border-bottom-width: 2px;
+  border-bottom-color: var(--keycap-border-b);
+  border-radius: 8px;
   background: var(--keycap-bg);
   color: var(--keycap-fg);
   font-family: ui-monospace, "Geist Mono", SFMono-Regular, Menlo, monospace;
-  font-size: 20px;
-  font-weight: 500;
-  box-shadow: 0 2px 0 var(--keycap-shadow);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  box-shadow: 0 1px 0 var(--keycap-shadow);
+  user-select: none;
 }
-/* Test action — secondary surface, full width in panel */
+/* Primary-style send when enabled; muted secondary when disabled */
 .test-button {
-  grid-column: 1 / -1;
-  width: 100%;
-  height: var(--control-h);
-  padding: 0 10px;
-  border-color: var(--btn-secondary-border);
-  border-radius: var(--radius-sm);
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-fg);
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  padding: 0 14px;
+  border-color: transparent;
+  border-radius: 8px;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
 }
 .test-button:hover:not(:disabled) {
-  border-color: var(--btn-secondary-border-hover);
-  background: var(--btn-secondary-bg-hover);
-  color: var(--btn-secondary-fg);
+  border-color: transparent;
+  background: var(--btn-primary-bg-hover);
+  color: var(--btn-primary-fg);
 }
 .test-button:active:not(:disabled) {
-  border-color: var(--btn-secondary-border-active);
-  background: var(--btn-secondary-bg-active);
-  color: var(--btn-secondary-fg);
+  border-color: transparent;
+  background: var(--btn-primary-bg-active);
+  color: var(--btn-primary-fg);
 }
 .test-button:disabled {
   background: var(--btn-secondary-bg-disabled);

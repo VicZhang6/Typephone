@@ -32,6 +32,11 @@ final class AppState: ObservableObject {
         if routing.mode != .off, peripheral.isSubscribed {
             return routing.mode == .exclusive ? "正在独占输入到 iPhone" : "正在镜像输入到 iPhone"
         }
+        // Prefer subscription over BLEStatus — advertising restarts must not
+        // report "等待配对" while HID input is already subscribed.
+        if peripheral.isSubscribed {
+            return "已连接 iPhone"
+        }
         return switch peripheral.status {
         case .unknown: "未启动"
         case .bluetoothUnavailable: "蓝牙不可用"
@@ -43,7 +48,7 @@ final class AppState: ObservableObject {
     }
 
     var statusDot: String {
-        if routing.mode != .off, peripheral.isSubscribed { return "●" }
+        if peripheral.isSubscribed { return "●" }
         return switch peripheral.status {
         case .connected: "●"
         case .advertising: "◐"
@@ -56,14 +61,20 @@ final class AppState: ObservableObject {
 
     /// JSON-safe state for the Electron renderer and diagnostics export.
     var statusPayload: [String: Any] {
+        // Always surface an active HID subscription as connected so the UI
+        // cannot show "等待配对" when the phone is already subscribed.
         let status: String
-        switch peripheral.status {
-        case .unknown: status = "unknown"
-        case .bluetoothUnavailable: status = "bluetoothUnavailable"
-        case .ready: status = "ready"
-        case .advertising: status = "advertising"
-        case .connected: status = "connected"
-        case .error: status = "error"
+        if peripheral.isSubscribed {
+            status = "connected"
+        } else {
+            switch peripheral.status {
+            case .unknown: status = "unknown"
+            case .bluetoothUnavailable: status = "bluetoothUnavailable"
+            case .ready: status = "ready"
+            case .advertising: status = "advertising"
+            case .connected: status = "connected"
+            case .error: status = "error"
+            }
         }
 
         return [

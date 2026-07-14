@@ -130,11 +130,20 @@ function routingLabel(mode) {
   return t('modeOffShort');
 }
 
+function isPhoneConnected(status) {
+  // Native may still report advertising while HID is subscribed; treat
+  // either signal as connected so the control card does not stay on
+  // “等待配对”.
+  return status.status === 'connected' || Boolean(status.isSubscribed);
+}
+
 function sidebarStatusLabel(status) {
   if (status.status === 'backendOffline') return t('statusOffline');
-  if (status.routingMode === 'mirror') return t('statusMirroring');
-  if (status.routingMode === 'exclusive') return t('statusExclusive');
-  if (status.status === 'connected') return t('statusConnected');
+  if (isPhoneConnected(status)) {
+    if (status.routingMode === 'mirror') return t('statusMirroring');
+    if (status.routingMode === 'exclusive') return t('statusExclusive');
+    return t('statusConnected');
+  }
   if (status.isAdvertising || status.status === 'advertising') return t('statusAdvertising');
   if (status.status === 'error') return t('statusError');
   return status.statusText || t('statusUnknown');
@@ -143,7 +152,7 @@ function sidebarStatusLabel(status) {
 function render(status) {
   latestStatus = status || latestStatus;
   status = latestStatus;
-  const connected = status.status === 'connected';
+  const connected = isPhoneConnected(status);
   const backendOnline = status.status !== 'backendOffline';
 
   elements.statusPill.dataset.state = status.routingMode && status.routingMode !== 'off'
