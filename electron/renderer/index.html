@@ -15,8 +15,7 @@
       <aside class="sidebar" aria-label="主导航">
         <div class="sidebar-brand">
           <div class="sidebar-brand-copy">
-            <strong>Mac Input</strong>
-            <span>BLE 键盘</span>
+            <strong>Type to Phone</strong>
           </div>
         </div>
 
@@ -102,19 +101,19 @@
             <section class="workflow-card">
               <div class="mode-grid" role="radiogroup" aria-label="输入模式">
                 <button class="mode-card" data-mode="off" role="radio" aria-checked="true" type="button">
-                  <span class="mode-radio"></span>
-                  <span class="mode-icon muted-icon" aria-hidden="true"><span class="hi" data-icon="no-symbol"></span></span>
+                  <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="signal-slash"></span></span>
                   <span class="mode-copy"><strong>关闭</strong><small>按键只留在 Mac</small></span>
+                  <span class="mode-check" aria-hidden="true"><span class="hi" data-icon="check"></span></span>
                 </button>
                 <button class="mode-card" data-mode="mirror" role="radio" aria-checked="false" type="button">
-                  <span class="mode-radio"></span>
-                  <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="square-2-stack"></span></span>
+                  <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="device-phone-mobile"></span></span>
                   <span class="mode-copy"><strong>镜像输入</strong><small>Mac 和 iPhone 同时接收</small></span>
+                  <span class="mode-check" aria-hidden="true"><span class="hi" data-icon="check"></span></span>
                 </button>
                 <button class="mode-card" data-mode="exclusive" role="radio" aria-checked="false" type="button">
-                  <span class="mode-radio"></span>
                   <span class="mode-icon" aria-hidden="true"><span class="hi" data-icon="device-phone-mobile"></span></span>
                   <span class="mode-copy"><strong>独占输入</strong><small>按键只发送到 iPhone</small></span>
+                  <span class="mode-check" aria-hidden="true"><span class="hi" data-icon="check"></span></span>
                 </button>
               </div>
               <div class="emergency-note">
@@ -174,36 +173,33 @@
               <div class="diagnostics-grid">
                 <dl class="diag-list">
                   <div>
-                    <dt><span class="diag-icon tone-blue" aria-hidden="true"><span class="hi hi-sm" data-icon="signal"></span></span>Bluetooth</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="signal"></span></span>Bluetooth</dt>
                     <dd id="bluetooth-state">—</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon tone-green" aria-hidden="true"><span class="hi hi-sm" data-icon="wifi"></span></span>广播</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="wifi"></span></span>广播</dt>
                     <dd id="advertising-state">否</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon tone-purple" aria-hidden="true"><span class="hi hi-sm" data-icon="cpu-chip"></span></span>HID Service</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="cpu-chip"></span></span>HID Service</dt>
                     <dd id="hid-service">未添加</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon tone-amber" aria-hidden="true"><span class="hi hi-sm" data-icon="command-line"></span></span>输入模式</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="command-line"></span></span>输入模式</dt>
                     <dd id="routing-mode">关闭</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon tone-blue" aria-hidden="true"><span class="hi hi-sm" data-icon="eye"></span></span>输入监控</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="eye"></span></span>输入监控</dt>
                     <dd id="listen-access">缺失</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon tone-violet" aria-hidden="true"><span class="hi hi-sm" data-icon="shield-check"></span></span>辅助功能</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="shield-check"></span></span>辅助功能</dt>
                     <dd id="accessibility-access">缺失</dd>
                   </div>
                   <div>
-                    <dt><span class="diag-icon tone-blue" aria-hidden="true"><span class="hi hi-sm" data-icon="queue-list"></span></span>发送队列</dt>
+                    <dt><span class="diag-icon" aria-hidden="true"><span class="hi hi-sm" data-icon="queue-list"></span></span>发送队列</dt>
                     <dd id="queue-depth">0</dd>
                   </div>
-                </dl>
-
-                <dl class="diag-list">
                   <div>
                     <dt>原生服务</dt>
                     <dd id="native-service">检查中</dd>

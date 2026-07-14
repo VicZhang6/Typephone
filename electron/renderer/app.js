@@ -112,15 +112,18 @@ function render(status) {
   const healthLabel = elements.diagnosticHealth.childNodes[elements.diagnosticHealth.childNodes.length - 1];
   if (healthLabel) healthLabel.textContent = healthy ? '运行正常' : '需要检查';
 
-  setDiagnosticTone(elements.bluetoothState, status.bluetoothState === 'poweredOn' ? 'good' : status.bluetoothState === 'unknown' ? 'neutral' : 'warning');
+  // Restrained tones: ink for primary values, muted for inactive — no per-row rainbow.
+  setDiagnosticTone(elements.bluetoothState, status.bluetoothState === 'poweredOn' ? 'good' : 'neutral');
   setDiagnosticTone(elements.advertisingState, status.isAdvertising ? 'good' : 'neutral');
-  setDiagnosticTone(elements.hidService, status.hidServiceAdded ? 'good' : 'warning');
-  setDiagnosticTone(elements.listenAccess, status.listenAccess ? 'good' : 'warning');
-  setDiagnosticTone(elements.accessibilityAccess, status.accessibilityAccess ? 'good' : 'warning');
-  setDiagnosticTone(elements.queueDepth, (status.queueDepth ?? 0) === 0 ? 'good' : 'warning');
-  setDiagnosticTone(elements.nativeService, backendOnline ? 'good' : 'warning');
+  setDiagnosticTone(elements.hidService, status.hidServiceAdded ? 'good' : 'neutral');
+  setDiagnosticTone(elements.listenAccess, status.listenAccess ? 'good' : 'neutral');
+  setDiagnosticTone(elements.accessibilityAccess, status.accessibilityAccess ? 'good' : 'neutral');
+  setDiagnosticTone(elements.queueDepth, 'good');
+  setDiagnosticTone(elements.nativeService, backendOnline ? 'good' : 'neutral');
   setDiagnosticTone(elements.subscription, status.isSubscribed ? 'good' : 'neutral');
   setDiagnosticTone(elements.captureState, status.isCapturing ? 'good' : 'neutral');
+  setDiagnosticTone(elements.routingMode, status.routingMode && status.routingMode !== 'off' ? 'good' : 'neutral');
+  setDiagnosticTone(elements.capsLock, status.capsLock ? 'good' : 'neutral');
 
   elements.sendAButton.disabled = !status.canSendA;
   elements.restartButton.disabled = !backendOnline;
