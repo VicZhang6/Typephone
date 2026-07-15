@@ -47,7 +47,10 @@
 
         <div class="sidebar-footer">
           <div class="status-pill compact" id="status-pill">
-            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-pill-icon" aria-hidden="true">
+              <span class="hi" data-icon="device-phone-mobile"></span>
+              <span class="status-pill-live"></span>
+            </span>
             <span id="status-text" data-i18n="statusConnecting">正在连接原生服务</span>
           </div>
         </div>
@@ -254,7 +257,6 @@
             hidden
           >
             <section class="settings-page">
-              <p class="settings-hint" data-i18n="settingsHint">主题与语言默认跟随系统，可在此覆盖。</p>
               <div class="settings-list">
                 <label class="settings-row" for="setting-theme">
                   <span class="settings-label" data-i18n="settingsTheme">主题</span>
@@ -285,6 +287,10 @@
                     data-i18n="settingsOpenDiagnostics"
                   >打开诊断</button>
                 </div>
+              </div>
+              <div class="settings-version" id="settings-version" aria-live="polite">
+                <span class="settings-version-label" data-i18n="settingsVersion">版本</span>
+                <span class="settings-version-value" id="settings-version-value">—</span>
               </div>
             </section>
           </section>

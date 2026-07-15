@@ -694,21 +694,53 @@ summary:focus-visible,
   white-space: nowrap;
   color: var(--ds-gray-1000);
 }
-.status-dot {
-  width: 8px;
-  height: 8px;
+/* Same phone + live-dot motif as the connection card */
+.status-pill-icon {
+  position: relative;
+  display: grid;
+  width: 16px;
+  height: 16px;
   flex: none;
+  place-items: center;
+  color: var(--ds-gray-1000);
+}
+.status-pill-icon .hi {
+  width: 16px;
+  height: 16px;
+}
+.status-pill-live {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--ds-gray-500);
+  /* Ring matches glass sidebar, not the opaque workspace */
+  box-shadow: 0 0 0 1.5px var(--sidebar-glass, rgba(255, 255, 255, 0.28));
 }
-.status-pill[data-state="connected"] .status-dot,
-.status-pill[data-state="routing"] .status-dot,
-.status-pill[data-state="advertising"] .status-dot {
+.status-pill[data-state="connected"] .status-pill-live,
+.status-pill[data-state="routing"] .status-pill-live,
+.status-pill[data-state="advertising"] .status-pill-live {
   background: var(--ds-gray-1000);
 }
-.status-pill[data-state="error"] .status-dot,
-.status-pill[data-state="backendOffline"] .status-dot {
+.status-pill[data-state="error"] .status-pill-live,
+.status-pill[data-state="backendOffline"] .status-pill-live,
+.status-pill[data-state="idle"] .status-pill-live,
+.status-pill[data-state="ready"] .status-pill-live,
+.status-pill[data-state="unknown"] .status-pill-live {
   background: var(--ds-gray-600);
+}
+@media (prefers-color-scheme: dark) {
+  .status-pill-live {
+    box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.55);
+  }
+}
+html[data-theme="dark"] .status-pill-live {
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.55);
+}
+html[data-theme="light"] .status-pill-live {
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.55);
 }
 
 .workspace {
@@ -1385,12 +1417,32 @@ button:disabled {
 /* Settings — flat rows, native select restyled (no blue focus flash) */
 .settings-page {
   max-width: 480px;
+  width: 100%;
+  margin-inline: auto;
 }
-.settings-hint {
-  margin: 0 0 var(--space-4);
-  color: var(--muted);
+.settings-version {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--space-8);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--ds-gray-400);
+  text-align: center;
+}
+.settings-version-label {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--subtle);
+  letter-spacing: .02em;
+}
+.settings-version-value {
   font-size: 13px;
+  font-weight: 500;
   line-height: 18px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 .settings-list {
   display: flex;

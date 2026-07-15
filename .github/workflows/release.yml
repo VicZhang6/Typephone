@@ -1,0 +1,100 @@
+name: Release
+
+# Formal release: bump Version Name (semver) + Build Number, stamp, tag.
+# Trigger via workflow_dispatch (choose patch|minor|major) or a v* tag push.
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        description: Version Name bump level
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve release version
+        id: ver
+        env:
+          LEVEL: ${{ github.event.inputs.level }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${REF_NAME}" == v* ]]; then
+            # Tag-driven release: stamp with tag Version Name, unique Build Number.
+            NAME="${REF_NAME#v}"
+            export VERSION_NAME="$NAME"
+            export BUILD_NUMBER="${{ github.run_number }}"
+            export RELEASE_CHANNEL=production
+            node scripts/version.js stamp
+          else
+            export BUILD_NUMBER="${{ github.run_number }}"
+            export RELEASE_CHANNEL=production
+            node scripts/version.js release "${LEVEL:-patch}"
+          fi
+          node scripts/version.js print | tee /tmp/version-out.json
+          echo "version_name=$(node -p 'require(\"./version.json\").versionName')" >> "$GITHUB_OUTPUT"
+          echo "build_number=$(node -p 'require(\"./version.json\").buildNumber')" >> "$GITHUB_OUTPUT"
+
+      - name: Commit version files
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add version.json package.json project.yml electron/shared/version-stamp.js
+          git commit -m "Release v${{ steps.ver.outputs.version_name }} (Build ${{ steps.ver.outputs.build_number }})" || echo "No version file changes"
+          git tag -f "v${{ steps.ver.outputs.version_name }}"
+          git push origin HEAD:${{ github.ref_name }} --tags
+
+      - name: Build native (release)
+        run: npm run build:native:release
+
+      - name: Package Electron (dir)
+        run: CSC_IDENTITY_AUTO_DISCOVERY=false npx electron-builder --mac dir
+        env:
+          RELEASE_CHANNEL: production
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Typephone-v${{ steps.ver.outputs.version_name }}-b${{ steps.ver.outputs.build_number }}
+          path: dist/mac-arm64
+
+      - name: Create GitHub Release
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version_name }}
+          name: Typephone v${{ steps.ver.outputs.version_name }}
+          body: |
+            **Version Name:** ${{ steps.ver.outputs.version_name }}
+            **Build Number:** ${{ steps.ver.outputs.build_number }}
+            **Commit:** ${{ github.sha }}
+          generate_release_notes: true

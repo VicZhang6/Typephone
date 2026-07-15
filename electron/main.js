@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const net = require('node:net');
 const path = require('node:path');
 const { APP_NAME, LOG_PREFIX, quitLabel } = require('./shared/branding');
+const versionInfo = require('./shared/version');
 
 /** Opaque fallback when vibrancy is unavailable. */
 function windowBackgroundColor() {
@@ -525,6 +526,8 @@ ipcMain.handle('app:set-theme-source', (_event, source) => {
   applyWindowTheme();
   return nativeTheme.themeSource;
 });
+
+ipcMain.handle('app:get-version', () => versionInfo.toJSON());
 
 ipcMain.handle('native:get-status', async () => {
   try {

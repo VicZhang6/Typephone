@@ -37,7 +37,8 @@ const elements = {
   settingTheme: document.querySelector('#setting-theme'),
   settingLanguage: document.querySelector('#setting-language'),
   openDiagnostics: document.querySelector('#open-diagnostics'),
-  diagnosticsBack: document.querySelector('#diagnostics-back')
+  diagnosticsBack: document.querySelector('#diagnostics-back'),
+  settingsVersionValue: document.querySelector('#settings-version-value')
 };
 
 const prefs = window.TtpPrefs.load();
@@ -155,9 +156,9 @@ function render(status) {
   const connected = isPhoneConnected(status);
   const backendOnline = status.status !== 'backendOffline';
 
-  elements.statusPill.dataset.state = status.routingMode && status.routingMode !== 'off'
+  elements.statusPill.dataset.state = status.routingMode && status.routingMode !== 'off' && connected
     ? 'routing'
-    : (status.status || 'backendOffline');
+    : (connected ? 'connected' : (status.status || 'backendOffline'));
   elements.statusText.textContent = sidebarStatusLabel(status);
 
   elements.nativeService.textContent = backendOnline ? t('connected') : t('offline');
@@ -294,6 +295,7 @@ function onLanguageChange() {
   persistPrefs();
   i18n.setPreference(prefs.language);
   applyStaticI18n();
+  loadVersionLabel();
 }
 
 for (const item of elements.navItems) {
@@ -350,8 +352,25 @@ function bindScrollChrome(el) {
 bindScrollChrome(document.querySelector('.workspace'));
 bindScrollChrome(document.querySelector('.sidebar'));
 
+async function loadVersionLabel() {
+  if (!elements.settingsVersionValue || !window.macInput?.getVersion) return;
+  try {
+    const v = await window.macInput.getVersion();
+    elements.settingsVersionValue.textContent = t('settingsVersionDisplay', {
+      versionName: v.versionName,
+      buildNumber: v.buildNumber
+    });
+    elements.settingsVersionValue.title = v.gitCommit
+      ? `${v.display} · ${v.gitCommit}`
+      : v.display;
+  } catch {
+    elements.settingsVersionValue.textContent = '—';
+  }
+}
+
 window.TtpPrefs.applyTheme(prefs.theme);
 applyStaticI18n();
+loadVersionLabel();
 setView(activeView);
 window.macInput.onStatus(render);
 window.macInput.getStatus().then(render);

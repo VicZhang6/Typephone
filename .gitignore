@@ -52,3 +52,7 @@ Thumbs.db
 # Coverage
 coverage/
 *.lcov
+
+# Local-only version stamp regenerates on npm run dev / CI stamp
+# (version.json remains the committed source of truth)
+# electron/shared/version-stamp.js is committed after stamp so clean checkouts work offline

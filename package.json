@@ -6,10 +6,17 @@
   "author": "Vic Zhang",
   "main": "electron/main.js",
   "scripts": {
+    "version:stamp": "node scripts/version.js stamp",
+    "version:bump-build": "node scripts/version.js bump-build",
+    "version:release": "node scripts/version.js release",
+    "version:print": "node scripts/version.js print",
+    "predev": "node scripts/version.js stamp",
+    "prestart": "node scripts/version.js stamp",
+    "predist:dir": "node scripts/version.js stamp",
     "build:native": "xcodegen generate && xcodebuild -project MacInput.xcodeproj -scheme MacInput -configuration Debug -sdk macosx -derivedDataPath /tmp/MacInputDerived CODE_SIGNING_ALLOWED=NO build",
     "build:native:release": "xcodegen generate && xcodebuild -project MacInput.xcodeproj -scheme MacInput -configuration Release -sdk macosx -derivedDataPath build/native CODE_SIGNING_ALLOWED=NO build",
     "test:native": "xcodegen generate && xcodebuild -project MacInput.xcodeproj -scheme MacInputTests -configuration Debug -sdk macosx -derivedDataPath /tmp/MacInputDerived CODE_SIGNING_ALLOWED=NO test",
-    "check:js": "node --check electron/main.js && node --check electron/preload.js && node --check electron/renderer/app.js",
+    "check:js": "node --check electron/main.js && node --check electron/preload.js && node --check electron/renderer/app.js && node --check electron/shared/version.js && node --check scripts/version.js",
     "start:native": "open /tmp/MacInputDerived/Build/Products/Debug/MacInput.app",
     "start": "electron electron/main.js",
     "dev": "npm run build:native && electron electron/main.js",
@@ -23,9 +30,11 @@
   "build": {
     "appId": "com.viczhang.typephone.electron",
     "productName": "Typephone",
+    "buildVersion": "1",
     "files": [
       "electron/**/*",
-      "package.json"
+      "package.json",
+      "version.json"
     ],
     "extraMetadata": {
       "name": "typephone"

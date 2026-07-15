@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-`npm run dev` builds the native helper, launches it with `--electron-helper`, and starts Electron. The helper runs unsandboxed because macOS `CGEventTap` cannot operate from a sandboxed process.
+`npm run dev` stamps version metadata, builds the native helper, launches it with `--electron-helper`, and starts Electron. The helper runs unsandboxed because macOS `CGEventTap` cannot operate from a sandboxed process.
 
 Run native tests directly:
 
@@ -51,6 +51,38 @@ npm run dist:dir
 ```
 
 Production distribution still requires signing/notarization and a real Apple Developer Team. The nested Swift helper must be signed with the same distribution identity as the Electron app.
+
+## Versioning
+
+Typephone separates **Version Name** (user-facing semver) from **Build Number** (monotonic integer).
+
+| Field | Example | When it changes |
+|-------|---------|-----------------|
+| Version Name | `1.3.0` | Formal release only (`patch` / `minor` / `major`) |
+| Build Number | `258` | Every CI/dev build (or CI `run_number`) |
+
+Source of truth: [`version.json`](./version.json). Runtime stamp (commit + display string): `electron/shared/version-stamp.js`.
+
+```bash
+# Show current version
+npm run version:print
+
+# Dev / test: increment Build Number only
+npm run version:bump-build
+
+# Formal release: bump Version Name + Build Number + stamp
+npm run version:release -- patch   # or minor | major
+
+# Write stamp + sync package.json / project.yml only
+npm run version:stamp
+```
+
+Settings shows: `Version 1.3.0 (Build 258)` (tooltip includes git commit).
+
+CI workflows:
+
+- **CI** (PR / push to `main`): sets Build Number from `github.run_number`, does **not** change Version Name.
+- **Release** (workflow_dispatch with level, or `v*.*.*` tag): bumps Version Name, stamps Build Number, packages, creates GitHub Release.
 
 ## Real-device acceptance
 

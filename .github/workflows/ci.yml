@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bump build number (dev/test builds only)
+        # Monotonic CI build: use run number so every CI build is unique.
+        # Does not change Version Name.
+        run: |
+          node scripts/version.js set-build "${{ github.run_number }}"
+          node scripts/version.js print
+
+      - name: Check JS
+        run: npm run check:js
+
+      - name: Native unit tests
+        run: npm run test:native

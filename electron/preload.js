@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('macInput', {
   command: (command, payload = {}) => ipcRenderer.invoke('native:command', command, payload),
   hideWindow: () => ipcRenderer.send('window:hide'),
   setThemeSource: (source) => ipcRenderer.invoke('app:set-theme-source', source),
+  getVersion: () => ipcRenderer.invoke('app:get-version'),
   onStatus: (listener) => {
     const handler = (_event, status) => listener(status);
     ipcRenderer.on('native:status', handler);

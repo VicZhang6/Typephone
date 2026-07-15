@@ -110,6 +110,8 @@
       settingsLanguage: '语言',
       settingsDiagnostics: '诊断',
       settingsOpenDiagnostics: '打开',
+      settingsVersion: '版本',
+      settingsVersionDisplay: 'Version {versionName} (Build {buildNumber})',
       backToSettings: '返回设置',
       themeSystem: '跟随系统',
       themeLight: '浅色',
@@ -117,7 +119,6 @@
       langSystem: '跟随系统',
       langZh: '简体中文',
       langEn: 'English',
-      settingsHint: '主题与语言默认跟随系统，可在此覆盖。',
 
       toastFailed: '操作失败',
       toastExported: '诊断已保存：{path}',
@@ -224,6 +225,8 @@
       settingsLanguage: 'Language',
       settingsDiagnostics: 'Diagnostics',
       settingsOpenDiagnostics: 'Open',
+      settingsVersion: 'Version',
+      settingsVersionDisplay: 'Version {versionName} (Build {buildNumber})',
       backToSettings: 'Back to Settings',
       themeSystem: 'System',
       themeLight: 'Light',
@@ -231,7 +234,6 @@
       langSystem: 'System',
       langZh: '简体中文',
       langEn: 'English',
-      settingsHint: 'Theme and language follow the system by default. Override them here.',
 
       toastFailed: 'Something went wrong',
       toastExported: 'Diagnostics saved: {path}',
