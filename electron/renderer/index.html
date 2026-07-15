@@ -13,9 +13,8 @@
     <div class="app-frame">
       <aside class="sidebar" aria-label="Main">
         <div class="sidebar-brand">
-          <div class="sidebar-brand-copy">
-            <strong data-i18n="appName">Typephone</strong>
-          </div>
+          <img class="sidebar-brand-logo" src="assets/sidebar-logo.svg" alt="" aria-hidden="true" />
+          <img class="sidebar-brand-name" src="assets/sidebar-name.svg" alt="Typephone" />
         </div>
 
         <nav class="sidebar-nav" role="tablist" aria-label="Pages">
@@ -83,7 +82,16 @@
                   <p id="connection-detail">—</p>
                 </div>
               </div>
-              <button class="primary-button connection-action" id="advertise-button" type="button">—</button>
+              <div class="connection-actions">
+                <button
+                  class="secondary-button connection-keyboard-action"
+                  id="show-keyboard-button"
+                  type="button"
+                  data-i18n="btnShowPhoneKeyboard"
+                  hidden
+                >显示手机键盘</button>
+                <button class="primary-button connection-action" id="advertise-button" type="button">—</button>
+              </div>
             </section>
 
             <section class="permission-banner" id="permission-banner" hidden>
@@ -300,6 +308,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     <script src="../shared/branding.js"></script>
+    <script src="../shared/connection-state.js"></script>
     <script src="i18n.js"></script>
     <script src="prefs.js"></script>
     <script src="app.js"></script>

@@ -8,6 +8,7 @@ const elements = {
   connectionDetail: document.querySelector('#connection-detail'),
   connectionBadge: document.querySelector('#connection-badge'),
   advertiseButton: document.querySelector('#advertise-button'),
+  showKeyboardButton: document.querySelector('#show-keyboard-button'),
   permissionBanner: document.querySelector('#permission-banner'),
   requestPermissions: document.querySelector('#request-permissions'),
   openInputSettings: document.querySelector('#open-input-settings'),
@@ -43,10 +44,13 @@ const elements = {
 
 const prefs = window.TtpPrefs.load();
 const i18n = window.TtpI18n.createI18n(prefs.language);
+const APP_KEYBOARD_NAME = window.TtpBranding?.APP_KEYBOARD_NAME || 'Typephone Keyboard';
+const { isPhoneConnected } = window.TtpConnectionState;
 
 let latestStatus = { status: 'backendOffline', routingMode: 'off' };
 let activeView = 'control';
 let toastTimer;
+let keyboardRequestInFlight = false;
 
 function t(key, vars) {
   return i18n.t(key, vars);
@@ -131,13 +135,6 @@ function routingLabel(mode) {
   return t('modeOffShort');
 }
 
-function isPhoneConnected(status) {
-  // Native may still report advertising while HID is subscribed; treat
-  // either signal as connected so the control card does not stay on
-  // “等待配对”.
-  return status.status === 'connected' || Boolean(status.isSubscribed);
-}
-
 function sidebarStatusLabel(status) {
   if (status.status === 'backendOffline') return t('statusOffline');
   if (isPhoneConnected(status)) {
@@ -202,6 +199,8 @@ function render(status) {
   setDiagnosticTone(elements.capsLock, status.capsLock ? 'good' : 'neutral');
 
   elements.sendAButton.disabled = !status.canSendA;
+  elements.showKeyboardButton.hidden = !connected;
+  elements.showKeyboardButton.disabled = !connected || keyboardRequestInFlight;
   elements.restartButton.disabled = !backendOnline;
   elements.exportButton.disabled = !backendOnline;
   elements.permissionBanner.hidden = !backendOnline || Boolean(status.canSuppressKeyboard);
@@ -209,7 +208,7 @@ function render(status) {
   for (const button of elements.modeButtons) {
     const selected = button.dataset.mode === (status.routingMode || 'off');
     button.setAttribute('aria-checked', String(selected));
-    button.disabled = !connected && button.dataset.mode !== 'off';
+    button.disabled = !status.isSubscribed && button.dataset.mode !== 'off';
   }
 
   let cardState = 'idle';
@@ -233,14 +232,18 @@ function render(status) {
       : t('connConnectedTitle');
     elements.connectionDetail.textContent = status.routingMode === 'exclusive'
       ? t('connExclusiveDetail')
-      : t('connMirrorDetail');
-    elements.advertiseButton.textContent = t('btnStopAdvertise');
+      : (status.isSubscribed ? t('connMirrorDetail') : t('connConnectedPendingDetail'));
+    elements.advertiseButton.textContent = status.isAdvertising
+      ? t('btnStopAdvertise')
+      : t('btnStartAdvertise');
     elements.advertiseButton.disabled = false;
   } else if (status.isAdvertising || status.status === 'advertising') {
     cardState = 'advertising';
     badge = t('statusAdvertising');
     elements.connectionTitle.textContent = t('connAdvertisingTitle');
-    elements.connectionDetail.textContent = t('connAdvertisingDetail');
+    elements.connectionDetail.textContent = t('connAdvertisingDetail', {
+      deviceName: status.deviceName || APP_KEYBOARD_NAME
+    });
     elements.advertiseButton.textContent = t('btnStopAdvertise');
     elements.advertiseButton.disabled = false;
   } else if (status.status === 'error') {
@@ -310,6 +313,18 @@ if (elements.diagnosticsBack) {
 
 elements.advertiseButton.addEventListener('click', () => {
   runCommand(latestStatus.isAdvertising ? 'stopAdvertising' : 'startAdvertising');
+});
+elements.showKeyboardButton.addEventListener('click', async () => {
+  if (keyboardRequestInFlight) return;
+  keyboardRequestInFlight = true;
+  elements.showKeyboardButton.disabled = true;
+  const result = await runCommand('toggleSoftwareKeyboard');
+  keyboardRequestInFlight = false;
+  render(result);
+  if (result.status === 'backendOffline') return;
+  showToast(result.softwareKeyboardSignalSent
+    ? t('toastKeyboardSignalSent')
+    : t('toastKeyboardUnavailable'));
 });
 elements.sendAButton.addEventListener('click', () => runCommand('sendA'));
 elements.restartButton.addEventListener('click', () => runCommand('restart'));

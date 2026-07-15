@@ -19,7 +19,7 @@ final class MenuBarController: NSObject {
 
     private func bind() {
         state.peripheral.$status
-            .combineLatest(state.peripheral.$isSubscribed,
+            .combineLatest(state.peripheral.$isConnected,
                             state.peripheral.$lastReportHex,
                             state.peripheral.$lastLEDReport)
             .receive(on: DispatchQueue.main)
@@ -128,6 +128,8 @@ final class MenuBarController: NSObject {
         let caps = state.peripheral.lastLEDReport.contains(.capsLock) ? "ON" : "OFF"
         let msg = """
         状态：\(state.statusText)
+        广播名称：\(state.peripheral.deviceName)
+        已连接：\(state.peripheral.isConnected ? "是" : "否")
         已订阅：\(state.peripheral.isSubscribed ? "是" : "否")
         输入模式：\(state.routing.mode.title)
         键盘监听：\(state.permissions.canCaptureKeyboard ? "已授予" : "缺失")

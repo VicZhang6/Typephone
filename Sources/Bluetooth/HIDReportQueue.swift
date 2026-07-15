@@ -5,6 +5,7 @@ struct HIDReportDestination: OptionSet, Sendable {
 
     static let reportInput = HIDReportDestination(rawValue: 1 << 0)
     static let bootInput = HIDReportDestination(rawValue: 1 << 1)
+    static let consumerInput = HIDReportDestination(rawValue: 1 << 2)
 }
 
 /// Ordered notification queue with per-characteristic delivery tracking.
@@ -33,6 +34,9 @@ struct HIDReportQueue: Sendable {
             }
             if frame.pending.contains(.bootInput), deliver(frame.data, .bootInput) {
                 frame.pending.remove(.bootInput)
+            }
+            if frame.pending.contains(.consumerInput), deliver(frame.data, .consumerInput) {
+                frame.pending.remove(.consumerInput)
             }
             frames[0] = frame
             if !frame.pending.isEmpty { return }

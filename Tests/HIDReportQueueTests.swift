@@ -48,4 +48,25 @@ final class HIDReportQueueTests: XCTestCase {
         let expected = (0..<251).map { UInt8($0) }
         XCTAssertEqual(Array(delivered.prefix(251)), expected)
     }
+
+    func testConsumerReportRetriesAfterBackpressure() {
+        var queue = HIDReportQueue()
+        queue.enqueue(Data([0xB8, 0x00]), destinations: [.consumerInput])
+
+        var attempts = 0
+        queue.drain { _, destination in
+            XCTAssertEqual(destination, .consumerInput)
+            attempts += 1
+            return false
+        }
+        XCTAssertEqual(queue.count, 1)
+
+        queue.drain { _, destination in
+            XCTAssertEqual(destination, .consumerInput)
+            attempts += 1
+            return true
+        }
+        XCTAssertEqual(attempts, 2)
+        XCTAssertTrue(queue.isEmpty)
+    }
 }

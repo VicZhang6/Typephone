@@ -96,6 +96,16 @@ test('native helper requires the inherited control token', {
 
     const status = await request(port, { command: 'getStatus', authToken });
     assert.equal(status.type, 'status');
+    assert.equal(typeof status.deviceName, 'string');
+    assert.ok(status.deviceName.length > 0);
+    assert.equal(typeof status.isConnected, 'boolean');
+
+    const keyboardToggle = await request(port, {
+      command: 'toggleSoftwareKeyboard',
+      authToken
+    });
+    assert.equal(keyboardToggle.type, 'status');
+    assert.equal(typeof keyboardToggle.softwareKeyboardSignalSent, 'boolean');
 
     await sendOneWay(port, { command: 'shutdown', authToken });
     await new Promise((resolve, reject) => {

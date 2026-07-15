@@ -23,4 +23,18 @@ final class HIDReportTests: XCTestCase {
 
         XCTAssertEqual(Array(report.dropFirst(2)), [0x04, 0x05, 0x06, 0x07, 0x08, 0x09])
     }
+
+    func testConsumerEjectReportAndRelease() {
+        XCTAssertEqual(Array(HIDConsumerReportBuilder.report(.eject)), [0xB8, 0x00])
+        XCTAssertEqual(Array(HIDConsumerReportBuilder.zero), [0x00, 0x00])
+    }
+
+    func testDescriptorDeclaresKeyboardAndConsumerReportIDs() {
+        let bytes = HIDReportDescriptor.bytes
+        let reportIDs = zip(bytes, bytes.dropFirst())
+            .filter { $0.0 == 0x85 }
+            .map(\.1)
+        XCTAssertTrue(reportIDs.contains(0x01))
+        XCTAssertTrue(reportIDs.contains(0x02))
+    }
 }

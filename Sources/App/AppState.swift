@@ -32,9 +32,9 @@ final class AppState: ObservableObject {
         if routing.mode != .off, peripheral.isSubscribed {
             return routing.mode == .exclusive ? "正在独占输入到 iPhone" : "正在镜像输入到 iPhone"
         }
-        // Prefer subscription over BLEStatus — advertising restarts must not
-        // report "等待配对" while HID input is already subscribed.
-        if peripheral.isSubscribed {
+        // Any active GATT subscription proves that iPhone is connected. Input
+        // report subscription may arrive a moment later during HID setup.
+        if peripheral.isConnected {
             return "已连接 iPhone"
         }
         return switch peripheral.status {
@@ -48,7 +48,7 @@ final class AppState: ObservableObject {
     }
 
     var statusDot: String {
-        if peripheral.isSubscribed { return "●" }
+        if peripheral.isConnected { return "●" }
         return switch peripheral.status {
         case .connected: "●"
         case .advertising: "◐"
@@ -61,10 +61,10 @@ final class AppState: ObservableObject {
 
     /// JSON-safe state for the Electron renderer and diagnostics export.
     var statusPayload: [String: Any] {
-        // Always surface an active HID subscription as connected so the UI
-        // cannot show "等待配对" when the phone is already subscribed.
+        // Always surface an active Central subscription as connected so the
+        // UI cannot show "等待配对" while iPhone is already connected.
         let status: String
-        if peripheral.isSubscribed {
+        if peripheral.isConnected {
             status = "connected"
         } else {
             switch peripheral.status {
@@ -82,13 +82,16 @@ final class AppState: ObservableObject {
             "status": status,
             "statusText": statusText,
             "bluetoothState": peripheral.bluetoothStateName,
+            "deviceName": peripheral.deviceName,
             "isAdvertising": peripheral.isAdvertising,
             "hidServiceAdded": peripheral.isHIDServiceAdded,
             "addedServices": peripheral.addedServices,
+            "isConnected": peripheral.isConnected,
             "isSubscribed": peripheral.isSubscribed,
             "connectedCentralID": peripheral.connectedCentralID ?? NSNull(),
             "subscribedCharacteristics": peripheral.subscribedCharacteristicNames,
             "canSendA": canSendA,
+            "canToggleSoftwareKeyboard": peripheral.canToggleSoftwareKeyboard,
             "lastReportHex": peripheral.lastReportHex,
             "capsLock": peripheral.lastLEDReport.contains(.capsLock),
             "batteryLevel": peripheral.batteryLevel,
@@ -132,6 +135,16 @@ final class AppState: ObservableObject {
     func sendLetterA() {
         peripheral.tapKey(.a)
         diagnostics.record("发送测试按键 A")
+    }
+
+    @discardableResult
+    func toggleSoftwareKeyboard() -> Bool {
+        let sent = peripheral.toggleSoftwareKeyboard()
+        diagnostics.record(
+            sent ? "已发送 iPhone 软键盘切换指令" : "无法发送软键盘切换指令：Consumer Report 未订阅",
+            level: sent ? "info" : "warning"
+        )
+        return sent
     }
 
     func restart() {

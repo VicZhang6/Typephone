@@ -4,9 +4,8 @@
  * Product name comes from shared branding (single source of truth).
  */
 (function (global) {
-  const brand = global.TtpBranding || { APP_NAME: 'Typephone', APP_KEYBOARD_NAME: 'Typephone Keyboard' };
+  const brand = global.TtpBranding || { APP_NAME: 'Typephone' };
   const APP_NAME = brand.APP_NAME;
-  const APP_KEYBOARD_NAME = brand.APP_KEYBOARD_NAME;
 
   const catalogs = {
     'zh-CN': {
@@ -36,13 +35,15 @@
       connExclusiveDetail: 'Mac 本地按键已暂停 · ⌃⌥⌘Esc 紧急退出',
       connMirrorDetail: '选择镜像或独占模式后即可转发物理键盘',
       connAdvertisingTitle: '等待 iPhone 配对',
-      connAdvertisingDetail: `在 iPhone「设置 → 蓝牙」中选择 ${APP_KEYBOARD_NAME}`,
+      connAdvertisingDetail: '在 iPhone「设置 → 蓝牙」中选择“{deviceName}”',
+      connConnectedPendingDetail: 'iPhone 已连接，正在完成键盘设置…',
       connErrorTitle: '蓝牙服务启动失败',
       connErrorDetail: '请到「诊断」页查看详情后重试',
       connIdleTitle: '尚未开始等待配对',
       connIdleDetail: '开始等待后，iPhone 才能发现这台 Mac',
       btnStartAdvertise: '开始等待配对',
       btnStopAdvertise: '停止等待配对',
+      btnShowPhoneKeyboard: '显示手机键盘',
       btnRetry: '重新尝试',
 
       permEyebrow: '需要系统权限',
@@ -67,7 +68,7 @@
 
       helpTitle: '遇到问题？',
       helpHint: '展开故障排查步骤',
-      help1: `在 iPhone「设置 → 蓝牙」中忽略旧的 ${APP_KEYBOARD_NAME}`,
+      help1: '在 iPhone「设置 → 蓝牙」中忽略之前配对的键盘',
       help2: '在诊断页点击「重新等待配对」，等待设备重新出现',
       help3: '配对成功后，在 iPhone 备忘录中试打字',
       help4: '若仍失败，到「诊断」页导出诊断 JSON',
@@ -121,6 +122,8 @@
       langEn: 'English',
 
       toastFailed: '操作失败',
+      toastKeyboardSignalSent: '已发送键盘切换指令；若未显示，请使用 iPhone 的“显示键盘”',
+      toastKeyboardUnavailable: 'iPhone 尚未启用键盘切换控制。请忽略此设备并重新配对，或使用“显示键盘”',
       toastExported: '诊断已保存：{path}',
       toastBackendOffline: '原生 BLE 服务未启动'
     },
@@ -151,13 +154,15 @@
       connExclusiveDetail: 'Mac keys paused · ⌃⌥⌘Esc emergency exit',
       connMirrorDetail: 'Pick Mirror or Exclusive to forward the keyboard',
       connAdvertisingTitle: 'Waiting for iPhone',
-      connAdvertisingDetail: `On iPhone, open Settings → Bluetooth and choose ${APP_KEYBOARD_NAME}`,
+      connAdvertisingDetail: 'On iPhone, open Settings → Bluetooth and choose “{deviceName}”',
+      connConnectedPendingDetail: 'iPhone connected. Finishing keyboard setup…',
       connErrorTitle: 'Bluetooth failed to start',
       connErrorDetail: 'Check Diagnostics, then try again',
       connIdleTitle: 'Not advertising yet',
       connIdleDetail: 'Start advertising so your iPhone can discover this Mac',
       btnStartAdvertise: 'Start advertising',
       btnStopAdvertise: 'Stop advertising',
+      btnShowPhoneKeyboard: 'Show phone keyboard',
       btnRetry: 'Try again',
 
       permEyebrow: 'Permissions required',
@@ -182,7 +187,7 @@
 
       helpTitle: 'Having trouble?',
       helpHint: 'Expand troubleshooting steps',
-      help1: `Forget the old ${APP_KEYBOARD_NAME} in iPhone Settings → Bluetooth`,
+      help1: 'Forget the previously paired keyboard in iPhone Settings → Bluetooth',
       help2: 'In Diagnostics, tap Restart waiting, then wait for the device',
       help3: 'After pairing, open Notes on iPhone and try typing',
       help4: 'If it still fails, export diagnostics JSON from Diagnostics',
@@ -236,6 +241,8 @@
       langEn: 'English',
 
       toastFailed: 'Something went wrong',
+      toastKeyboardSignalSent: 'Keyboard toggle sent. If it stays hidden, use Show Keyboard on iPhone.',
+      toastKeyboardUnavailable: 'Keyboard toggle is not available yet. Forget and pair this device again, or use Show Keyboard on iPhone.',
       toastExported: 'Diagnostics saved: {path}',
       toastBackendOffline: 'Native BLE service is offline'
     }

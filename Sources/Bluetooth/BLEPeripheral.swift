@@ -12,6 +12,17 @@ enum BLEStatus: Equatable {
     case error(String)
 }
 
+/// Derives product connection readiness from active GATT subscriptions.
+enum HIDSubscriptionState {
+    static func isConnected(_ characteristics: Set<HIDProfile.CharacteristicID>) -> Bool {
+        !characteristics.isEmpty
+    }
+
+    static func isKeyboardReady(_ characteristics: Set<HIDProfile.CharacteristicID>) -> Bool {
+        characteristics.contains(.inputReport) || characteristics.contains(.bootKeyboardInput)
+    }
+}
+
 /// `CBPeripheralManager` wrapper that advertises a complete HOGP keyboard.
 ///
 /// Publishes the complete BLE HOGP profile, manages advertising and
@@ -20,9 +31,13 @@ enum BLEStatus: Equatable {
 final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeripheralManagerDelegate {
 
     /// Advertised device name shown in iOS Bluetooth settings.
-    static let deviceName = "Typephone Keyboard"
+    private(set) var deviceName: String
 
     @Published private(set) var status: BLEStatus = .unknown
+    /// CoreBluetooth does not expose a peripheral-side connection callback.
+    /// Any active subscription is the authoritative evidence that a Central
+    /// is connected, even before it subscribes to a keyboard input report.
+    @Published private(set) var isConnected = false
     @Published private(set) var isSubscribed = false
     @Published private(set) var isAdvertising = false
     @Published private(set) var lastReportHex: String = ""
@@ -40,12 +55,14 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
     private var characteristicValues: [HIDProfile.CharacteristicID: Data] = [
         .protocolMode: Data([0x01]),
         .inputReport: HIDReportBuilder.zero,
+        .consumerInputReport: HIDConsumerReportBuilder.zero,
         .outputReport: Data([0x00]),
         .bootKeyboardInput: HIDReportBuilder.zero,
         .bootKeyboardOutput: Data([0x00]),
         .batteryLevel: Data([100])
     ]
     private var wantsAdvertising = false
+    private var isConsumerKeyPressed = false
 
     /// Central currently subscribed to input reports (single-host product scope).
     private var subscriber: CBCentral?
@@ -58,6 +75,7 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
     private var addedServiceUUIDs: Set<String> = []
 
     init(queue: DispatchQueue? = .main) {
+        self.deviceName = DeviceNameProvider.currentComputerName
         self.manager = CBPeripheralManager(delegate: nil, queue: queue, options: [
             CBPeripheralManagerOptionShowPowerAlertKey: true
         ])
@@ -69,6 +87,8 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
 
     func startAdvertising() {
         wantsAdvertising = true
+        // Pick up a Computer Name change without requiring an app restart.
+        deviceName = DeviceNameProvider.currentComputerName
         guard manager.state == .poweredOn else {
             status = .bluetoothUnavailable
             return
@@ -85,12 +105,12 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         guard manager.state == .poweredOn else { return }
         let advertisement: [String: Any] = [
             CBAdvertisementDataServiceUUIDsKey: [HIDProfile.hidServiceUUID],
-            CBAdvertisementDataLocalNameKey: Self.deviceName
+            CBAdvertisementDataLocalNameKey: deviceName
         ]
         manager.startAdvertising(advertisement)
         // Keep an active HID subscription as "connected". Restarting
         // advertising (wake / service re-add) must not look unpaired.
-        if isSubscribed {
+        if isConnected {
             if case .connected = status { return }
             status = .connected(name: connectedCentralID)
             return
@@ -103,7 +123,7 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         manager.stopAdvertising()
         isAdvertising = false
         // Never demote an active subscription when the user only stops discovery.
-        if isSubscribed { return }
+        if isConnected { return }
         if case .advertising = status { status = .ready }
     }
 
@@ -113,7 +133,7 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
     func sendKeyboardReport(_ report: Data) -> Bool {
         guard subscriber != nil,
               manager.state == .poweredOn,
-              !subscribedCharacteristics.isEmpty else { return false }
+              HIDSubscriptionState.isKeyboardReady(subscribedCharacteristics) else { return false }
         characteristicValues[.inputReport] = report
         characteristicValues[.bootKeyboardInput] = report
         lastReportHex = report.map { String(format: "%02X", $0) }.joined(separator: " ")
@@ -122,6 +142,32 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         if subscribedCharacteristics.contains(.bootKeyboardInput) { destinations.insert(.bootInput) }
         reportQueue.enqueue(report, destinations: destinations)
         drainReportQueue()
+        return true
+    }
+
+    /// Send a Consumer Control report to its subscribed characteristic.
+    @discardableResult
+    func sendConsumerReport(_ report: Data) -> Bool {
+        guard subscriber != nil,
+              manager.state == .poweredOn,
+              subscribedCharacteristics.contains(.consumerInputReport) else { return false }
+        characteristicValues[.consumerInputReport] = report
+        reportQueue.enqueue(report, destinations: [.consumerInput])
+        drainReportQueue()
+        return true
+    }
+
+    /// Ask iOS/iPadOS to toggle its software keyboard using Consumer Eject.
+    @discardableResult
+    func toggleSoftwareKeyboard(holdMs: Int = 80) -> Bool {
+        guard !isConsumerKeyPressed,
+              sendConsumerReport(HIDConsumerReportBuilder.report(.eject)) else { return false }
+        isConsumerKeyPressed = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(holdMs)) { [weak self] in
+            guard let self else { return }
+            _ = sendConsumerReport(HIDConsumerReportBuilder.zero)
+            isConsumerKeyPressed = false
+        }
         return true
     }
 
@@ -173,16 +219,11 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         case .poweredOff:
             resetPublishedServices()
             status = .bluetoothUnavailable
-            isSubscribed = false
-            subscriber = nil
-            connectedCentralID = nil
         case .resetting:
             resetPublishedServices()
             status = .bluetoothUnavailable
-            isSubscribed = false
-            subscriber = nil
-            connectedCentralID = nil
         case .unauthorized, .unsupported:
+            resetPublishedServices()
             status = .bluetoothUnavailable
         case .unknown:
             status = .unknown
@@ -229,7 +270,7 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
             isAdvertising = true
             // Preserve connected / subscribed state if a late advertising
             // callback arrives after the iPhone already subscribed to HID.
-            if isSubscribed {
+            if isConnected {
                 if case .connected = status { return }
                 status = .connected(name: connectedCentralID)
                 return
@@ -242,7 +283,10 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral,
                             didSubscribeTo characteristic: CBCharacteristic) {
         guard let id = characteristicID(for: characteristic),
-              id == .inputReport || id == .bootKeyboardInput || id == .batteryLevel else { return }
+              id == .inputReport
+                || id == .consumerInputReport
+                || id == .bootKeyboardInput
+                || id == .batteryLevel else { return }
         if let subscriber, subscriber.identifier != central.identifier {
             // Phase 1 intentionally supports one central. Keep the first
             // bonded phone as the active route instead of interleaving reports.
@@ -251,10 +295,10 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         subscriber = central
         connectedCentralID = central.identifier.uuidString
         subscribedCharacteristics.insert(id)
-        isSubscribed = subscribedCharacteristics.contains(.inputReport)
-            || subscribedCharacteristics.contains(.bootKeyboardInput)
+        isConnected = HIDSubscriptionState.isConnected(subscribedCharacteristics)
+        isSubscribed = HIDSubscriptionState.isKeyboardReady(subscribedCharacteristics)
+        status = .connected(name: central.identifier.uuidString)
         if isSubscribed {
-            status = .connected(name: central.identifier.uuidString)
             _ = sendKeyboardReport(HIDReportBuilder.zero)
         }
     }
@@ -264,13 +308,15 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         if let id = characteristicID(for: characteristic) {
             subscribedCharacteristics.remove(id)
         }
-        isSubscribed = subscribedCharacteristics.contains(.inputReport)
-            || subscribedCharacteristics.contains(.bootKeyboardInput)
-        if !isSubscribed {
+        isConnected = HIDSubscriptionState.isConnected(subscribedCharacteristics)
+        isSubscribed = HIDSubscriptionState.isKeyboardReady(subscribedCharacteristics)
+        if !isConnected {
             subscriber = nil
             connectedCentralID = nil
             reportQueue.removeAll(keepingCapacity: true)
             status = wantsAdvertising ? .advertising : .ready
+        } else {
+            status = .connected(name: connectedCentralID)
         }
     }
 
@@ -322,6 +368,9 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
 
     var queueDepth: Int { reportQueue.count }
     var isHIDServiceAdded: Bool { addedServiceUUIDs.contains(HIDProfile.hidServiceUUID.uuidString) }
+    var canToggleSoftwareKeyboard: Bool {
+        isConnected && subscribedCharacteristics.contains(.consumerInputReport)
+    }
     var addedServices: [String] { addedServiceUUIDs.sorted() }
 
     var bluetoothStateName: String {
@@ -357,6 +406,7 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
 
         let reportInput = characteristics[.inputReport]
         let bootInput = characteristics[.bootKeyboardInput]
+        let consumerInput = characteristics[.consumerInputReport]
         let manager = self.manager
         reportQueue.drain { data, destination in
             switch destination {
@@ -366,6 +416,9 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
             case .bootInput:
                 guard let boot = bootInput else { return true }
                 return manager.updateValue(data, for: boot, onSubscribedCentrals: [subscriber])
+            case .consumerInput:
+                guard let consumer = consumerInput else { return true }
+                return manager.updateValue(data, for: consumer, onSubscribedCentrals: [subscriber])
             default:
                 return true
             }
@@ -379,12 +432,18 @@ final class BLEPeripheral: NSObject, ObservableObject, @preconcurrency CBPeriphe
         batteryService = nil
         characteristics.removeAll(keepingCapacity: true)
         characteristicValues[.inputReport] = HIDReportBuilder.zero
+        characteristicValues[.consumerInputReport] = HIDConsumerReportBuilder.zero
         characteristicValues[.bootKeyboardInput] = HIDReportBuilder.zero
         characteristicValues[.batteryLevel] = Data([batteryLevel])
         pendingServiceUUIDs.removeAll(keepingCapacity: true)
         addedServiceUUIDs.removeAll(keepingCapacity: true)
         reportQueue.removeAll(keepingCapacity: true)
         subscribedCharacteristics.removeAll(keepingCapacity: true)
+        subscriber = nil
+        connectedCentralID = nil
+        isConnected = false
+        isSubscribed = false
+        isConsumerKeyPressed = false
         isAdvertising = false
     }
 

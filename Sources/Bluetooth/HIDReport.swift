@@ -161,3 +161,22 @@ public enum HIDReportBuilder {
         return report
     }
 }
+
+/// Consumer-page usages sent through the dedicated Consumer Control report.
+public enum HIDConsumerUsage: UInt16, Sendable {
+    /// Consumer Eject is interpreted by iOS/iPadOS as the software-keyboard toggle.
+    case eject = 0x00B8
+}
+
+public enum HIDConsumerReportBuilder {
+    /// No Consumer Control is pressed.
+    public static var zero: Data {
+        Data(repeating: 0, count: HIDReportDescriptor.consumerInputReportSize)
+    }
+
+    /// A single 16-bit Consumer usage in little-endian report order.
+    public static func report(_ usage: HIDConsumerUsage) -> Data {
+        let raw = usage.rawValue
+        return Data([UInt8(raw & 0x00FF), UInt8((raw >> 8) & 0x00FF)])
+    }
+}

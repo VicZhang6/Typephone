@@ -127,6 +127,15 @@ final class ControlServer {
         case "sendA":
             state?.sendLetterA()
             sendStatus(on: connection)
+        case "toggleSoftwareKeyboard":
+            guard let state else {
+                send(["type": "error", "message": "Native state unavailable"], on: connection)
+                return
+            }
+            let sent = state.toggleSoftwareKeyboard()
+            var response = state.statusPayload
+            response["softwareKeyboardSignalSent"] = sent
+            send(response, on: connection)
         case "restart":
             state?.restart()
             sendStatus(on: connection)

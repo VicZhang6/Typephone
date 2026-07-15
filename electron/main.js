@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const net = require('node:net');
 const path = require('node:path');
 const { APP_NAME, LOG_PREFIX, quitLabel } = require('./shared/branding');
+const { isPhoneConnected } = require('./shared/connection-state');
 const { buildControlRequest } = require('./shared/control-protocol');
 const versionInfo = require('./shared/version');
 
@@ -30,6 +31,7 @@ function applyWindowTheme() {
 
 const nativeHost = '127.0.0.1';
 const defaultNativeApp = '/tmp/MacInputDerived/Build/Products/Debug/MacInput.app';
+const applicationIconPath = path.join(__dirname, 'assets', 'app-icon.png');
 /** Max time to wait for a graceful native shutdown before force-killing. */
 const NATIVE_SHUTDOWN_MS = 2500;
 
@@ -207,7 +209,9 @@ function offlineStatus(error) {
     status: 'backendOffline',
     statusText: '原生 BLE 服务未启动',
     isAdvertising: false,
+    isConnected: false,
     isSubscribed: false,
+    canToggleSoftwareKeyboard: false,
     canSendA: false,
     lastReportHex: '',
     capsLock: false,
@@ -388,7 +392,7 @@ function showMainWindow() {
 function buildTrayMenu(status) {
   const mode = status.routingMode || 'off';
   const modeTitle = status.routingModeTitle || '关闭';
-  const connected = status.status === 'connected' || status.isSubscribed;
+  const connected = isPhoneConnected(status);
   const line2 = connected
     ? `已连接 · ${modeTitle}`
     : (status.isAdvertising ? '等待 iPhone 配对' : '未在等待配对');
@@ -452,6 +456,7 @@ function trayMenuKey(status) {
     status.status,
     status.statusText,
     status.isAdvertising,
+    status.isConnected,
     status.isSubscribed,
     status.routingMode,
     status.routingModeTitle
@@ -509,6 +514,7 @@ function createWindow() {
     minHeight: 680,
     show: false,
     title: APP_NAME,
+    icon: applicationIconPath,
     titleBarStyle: 'hiddenInset',
     // Allow CSS -webkit-app-region: drag on the custom title strip.
     trafficLightPosition: { x: 16, y: 18 },
@@ -569,6 +575,7 @@ ipcMain.handle('native:command', async (_event, command, payload = {}) => {
     'stopAdvertising',
     'toggleAdvertising',
     'sendA',
+    'toggleSoftwareKeyboard',
     'restart',
     'setRoutingMode',
     'requestPermissions',
@@ -585,7 +592,11 @@ ipcMain.on('window:hide', () => mainWindow?.hide());
 app.whenReady().then(() => {
   // Keep Dock icon visible for the Electron control app.
   // The native Swift helper remains LSUIElement (agent) and stays out of Dock.
-  if (process.platform === 'darwin' && app.dock) app.dock.show();
+  if (process.platform === 'darwin' && app.dock) {
+    app.dock.show();
+    const dockIcon = nativeImage.createFromPath(applicationIconPath);
+    if (!dockIcon.isEmpty()) app.dock.setIcon(dockIcon);
+  }
   // Follow macOS / system appearance (light white / dark).
   nativeTheme.themeSource = 'system';
   nativeTheme.on('updated', applyWindowTheme);

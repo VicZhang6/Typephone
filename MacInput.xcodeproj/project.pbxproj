@@ -13,10 +13,13 @@
 		29E968D9B80DB76C9083944E /* RoutingStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C2B1B764BA08015889E80C /* RoutingStateTests.swift */; };
 		39DA2C2F34C2E4C8FCE1EBE7 /* BLEPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF2EB1019B56ADA65712C0F /* BLEPeripheral.swift */; };
 		5F650D6CC7E661FE7C63FF04 /* HIDReportQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E9993221E183716AC80963 /* HIDReportQueueTests.swift */; };
+		630B36BA5DE23B47E0739CC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B5343552BB0E4B2C99A263B /* Assets.xcassets */; };
 		64D80B6696854EE41F32DB7D /* ConnectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1976FD439DAB804E7692E676 /* ConnectionController.swift */; };
 		65BE34006D9747395F34DAEF /* KeyCodeMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4638919E29A94CDD2C803E7E /* KeyCodeMapperTests.swift */; };
+		6BF570E647A93786F103560D /* DeviceNameProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6475F949F2BA22613940065B /* DeviceNameProviderTests.swift */; };
 		6CE4F69580AD4431EF897ECC /* KeyboardCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3AF662340B2CF0A70A8F64 /* KeyboardCapture.swift */; };
 		79646048C21B140EE882FEB5 /* KeyboardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B28247A55DAEA9A1E1BF92 /* KeyboardState.swift */; };
+		850469942B2205C3090359EE /* HIDSubscriptionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF789CB42343C20F65B22D0 /* HIDSubscriptionStateTests.swift */; };
 		8CE76E57606BA83B04315F25 /* HIDReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670CCEDDEF6D08183AB149DA /* HIDReportTests.swift */; };
 		95FCF319214A1426666DA1F5 /* DiagnosticsRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A970ABD39D9B3E763F2D6E /* DiagnosticsRecorder.swift */; };
 		98FCD1F530864441CDDBCC66 /* HIDProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8A070BE35DB4ECF498B7E0 /* HIDProfile.swift */; };
@@ -29,6 +32,7 @@
 		E3612A138196DF85A45EAF66 /* RoutingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD95A0177323DB691E37AAF /* RoutingController.swift */; };
 		EBD48F4C78F1AA56241507C4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF292D401BCA13E115C7FC8D /* AppState.swift */; };
 		F7F987AAA6A84A52A60CC604 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FB1C79A511A1D1DA38E791 /* PermissionManager.swift */; };
+		F850AC20072CD54F51C52420 /* DeviceNameProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71059BC77CB9FB7DD272B1 /* DeviceNameProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,14 +50,18 @@
 		20B28247A55DAEA9A1E1BF92 /* KeyboardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardState.swift; sourceTree = "<group>"; };
 		2E8A070BE35DB4ECF498B7E0 /* HIDProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDProfile.swift; sourceTree = "<group>"; };
 		392E28E672FB1DB6F29F0C57 /* MacInputTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacInputTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A71059BC77CB9FB7DD272B1 /* DeviceNameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceNameProvider.swift; sourceTree = "<group>"; };
 		43315F7FE3E873DE3A3244DE /* HIDReportQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReportQueue.swift; sourceTree = "<group>"; };
 		4638919E29A94CDD2C803E7E /* KeyCodeMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapperTests.swift; sourceTree = "<group>"; };
 		4DD95A0177323DB691E37AAF /* RoutingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingController.swift; sourceTree = "<group>"; };
 		53CBCA02CA89696EBFBFF6B6 /* HIDReportDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReportDescriptor.swift; sourceTree = "<group>"; };
+		5B5343552BB0E4B2C99A263B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6475F949F2BA22613940065B /* DeviceNameProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceNameProviderTests.swift; sourceTree = "<group>"; };
 		66FB1C79A511A1D1DA38E791 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		670CCEDDEF6D08183AB149DA /* HIDReportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReportTests.swift; sourceTree = "<group>"; };
 		8BB52861A9A1FAE3A9CCC280 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
 		96A970ABD39D9B3E763F2D6E /* DiagnosticsRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsRecorder.swift; sourceTree = "<group>"; };
+		9CF789CB42343C20F65B22D0 /* HIDSubscriptionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDSubscriptionStateTests.swift; sourceTree = "<group>"; };
 		9DC7A468050D50978F998AD1 /* KeyboardStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardStateTests.swift; sourceTree = "<group>"; };
 		A790F73F98FF04076499F9FE /* MacInput.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacInput.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF3AF662340B2CF0A70A8F64 /* KeyboardCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardCapture.swift; sourceTree = "<group>"; };
@@ -101,6 +109,14 @@
 			path = Input;
 			sourceTree = "<group>";
 		};
+		B66AD193FC2568AC40D965A6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5B5343552BB0E4B2C99A263B /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		C9ABF8C5FA365FE71B924CFC /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +150,7 @@
 		DEB3F6B64F7EB849885AC7BF = {
 			isa = PBXGroup;
 			children = (
+				B66AD193FC2568AC40D965A6 /* Resources */,
 				55EACBBB8645B1C257CB75E6 /* Sources */,
 				DF5AFADFB8E9F6DDD63A633F /* Tests */,
 				D7A4F3F3BACC008AF169AB8D /* Products */,
@@ -143,8 +160,10 @@
 		DF5AFADFB8E9F6DDD63A633F /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				6475F949F2BA22613940065B /* DeviceNameProviderTests.swift */,
 				F2E9993221E183716AC80963 /* HIDReportQueueTests.swift */,
 				670CCEDDEF6D08183AB149DA /* HIDReportTests.swift */,
+				9CF789CB42343C20F65B22D0 /* HIDSubscriptionStateTests.swift */,
 				9DC7A468050D50978F998AD1 /* KeyboardStateTests.swift */,
 				4638919E29A94CDD2C803E7E /* KeyCodeMapperTests.swift */,
 				C3C2B1B764BA08015889E80C /* RoutingStateTests.swift */,
@@ -156,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				C2316698DD31ABA881ADF18E /* ControlServer.swift */,
+				3A71059BC77CB9FB7DD272B1 /* DeviceNameProvider.swift */,
 				96A970ABD39D9B3E763F2D6E /* DiagnosticsRecorder.swift */,
 				66FB1C79A511A1D1DA38E791 /* PermissionManager.swift */,
 				BF6A167CC2AD97D6B84F6885 /* SleepWakeMonitor.swift */,
@@ -189,6 +209,7 @@
 			buildConfigurationList = 7F3558B63A1B2F175EF499DE /* Build configuration list for PBXNativeTarget "MacInput" */;
 			buildPhases = (
 				E640900C7A9854AC2444B05D /* Sources */,
+				036F290B054538F7A3DE4B12 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -239,13 +260,26 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		036F290B054538F7A3DE4B12 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				630B36BA5DE23B47E0739CC9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D20247C38667F21F50A91190 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BF570E647A93786F103560D /* DeviceNameProviderTests.swift in Sources */,
 				5F650D6CC7E661FE7C63FF04 /* HIDReportQueueTests.swift in Sources */,
 				8CE76E57606BA83B04315F25 /* HIDReportTests.swift in Sources */,
+				850469942B2205C3090359EE /* HIDSubscriptionStateTests.swift in Sources */,
 				65BE34006D9747395F34DAEF /* KeyCodeMapperTests.swift in Sources */,
 				BC1210DECEFEF011CD82F5A9 /* KeyboardStateTests.swift in Sources */,
 				29E968D9B80DB76C9083944E /* RoutingStateTests.swift in Sources */,
@@ -260,6 +294,7 @@
 				39DA2C2F34C2E4C8FCE1EBE7 /* BLEPeripheral.swift in Sources */,
 				64D80B6696854EE41F32DB7D /* ConnectionController.swift in Sources */,
 				C42A3737C6006DDE3C01475B /* ControlServer.swift in Sources */,
+				F850AC20072CD54F51C52420 /* DeviceNameProvider.swift in Sources */,
 				95FCF319214A1426666DA1F5 /* DiagnosticsRecorder.swift in Sources */,
 				98FCD1F530864441CDDBCC66 /* HIDProfile.swift in Sources */,
 				0305A332110837C946E96FB1 /* HIDReport.swift in Sources */,

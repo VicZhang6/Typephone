@@ -7,8 +7,9 @@ import CoreBluetooth
 /// Services:
 /// - HID Service (0x1812)
 ///     • Protocol Mode       (0x2A4E)  read + writeWithoutResponse
-///     • Report (input)      (0x2A4D)  read + notify          [+ Report Reference 0x2908 = (0, Input)]
-///     • Report (output/LED) (0x2A4D)  read + write          [+ Report Reference 0x2908 = (0, Output)]
+///     • Keyboard input      (0x2A4D)  read + notify          [+ Report Reference = (1, Input)]
+///     • Consumer input      (0x2A4D)  read + notify          [+ Report Reference = (2, Input)]
+///     • Keyboard output/LED (0x2A4D)  read + write           [+ Report Reference = (1, Output)]
 ///     • Report Map          (0x2A4B)  read
 ///     • HID Information     (0x2A4A)  read
 ///     • HID Control Point   (0x2A4C)  writeWithoutResponse
@@ -52,9 +53,10 @@ enum HIDProfile {
     nonisolated(unsafe) static let batteryLevelUUID      = CBUUID(string: "00002A19-0000-1000-8000-00805F9B34FB")
 
     // Report Reference descriptor values: (reportID, reportType)
-    // reportType: 1 = Input, 2 = Output, 3 = Feature. reportID 0 = default report.
-    static let inputReportReference  = Data([0x00, 0x01])
-    static let outputReportReference = Data([0x00, 0x02])
+    // reportType: 1 = Input, 2 = Output, 3 = Feature.
+    static let keyboardInputReportReference  = Data([0x01, 0x01])
+    static let keyboardOutputReportReference = Data([0x01, 0x02])
+    static let consumerInputReportReference  = Data([0x02, 0x01])
 
     // HID Information value: bcdHID = 1.11 (0x0111), country code = 0 (NotLocalized),
     // flags = 0x03 (Remote Wake capable + Normally Connectable).
@@ -67,6 +69,7 @@ enum HIDProfile {
     enum CharacteristicID: String {
         case protocolMode
         case inputReport
+        case consumerInputReport
         case outputReport
         case reportMap
         case hidInformation
@@ -126,7 +129,7 @@ enum HIDProfile {
         // Keyboard input report (Report protocol) — notify, encrypted.
         let inputReportRef = CBMutableDescriptor(
             type: reportReferenceUUID,
-            value: NSData(data: inputReportReference)
+            value: NSData(data: keyboardInputReportReference)
         )
         let inputReport = CBMutableCharacteristic(
             type: reportUUID,
@@ -137,10 +140,24 @@ enum HIDProfile {
         inputReport.descriptors = [inputReportRef]
         chars[.inputReport] = inputReport
 
+        // Consumer Control input — Eject toggles the iOS software keyboard.
+        let consumerInputReportRef = CBMutableDescriptor(
+            type: reportReferenceUUID,
+            value: NSData(data: consumerInputReportReference)
+        )
+        let consumerInputReport = CBMutableCharacteristic(
+            type: reportUUID,
+            properties: [.read, .notify, .notifyEncryptionRequired],
+            value: nil,
+            permissions: [.readable, .readEncryptionRequired]
+        )
+        consumerInputReport.descriptors = [consumerInputReportRef]
+        chars[.consumerInputReport] = consumerInputReport
+
         // Keyboard output report (Report protocol, LEDs) — write, encrypted.
         let outputReportRef = CBMutableDescriptor(
             type: reportReferenceUUID,
-            value: NSData(data: outputReportReference)
+            value: NSData(data: keyboardOutputReportReference)
         )
         let outputReport = CBMutableCharacteristic(
             type: reportUUID,
@@ -172,7 +189,7 @@ enum HIDProfile {
         let service = CBMutableService(type: hidServiceUUID, primary: true)
         service.characteristics = [
             protocolMode, reportMap, hidInformation, hidControlPoint,
-            inputReport, outputReport, bootInput, bootOutput
+            inputReport, consumerInputReport, outputReport, bootInput, bootOutput
         ]
         return (service, chars)
     }

@@ -13,7 +13,7 @@
   return {
     /** Product display name (window, tray, menus, UI). */
     APP_NAME,
-    /** BLE peripheral name shown in iPhone Settings → Bluetooth. */
+    /** Fallback BLE name when macOS cannot provide its current Computer Name. */
     APP_KEYBOARD_NAME: `${APP_NAME} Keyboard`,
     /** Console / log prefix. */
     LOG_PREFIX: APP_NAME.toLowerCase(),
