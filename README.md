@@ -7,7 +7,7 @@ The product is an Electron application with a native Swift helper:
 - **Electron** owns the menu-bar tray, control window, permission guidance, routing controls, settings, and diagnostics export.
 - **Swift** owns `CoreBluetooth`, the HOGP service tree, `CGEventTap`, Accessibility/Input Monitoring permissions, sleep/wake recovery, and the ordered HID report queue.
 
-Electron cannot expose macOS as a BLE peripheral by itself, so the native layer is required for real HID advertising. The two processes communicate over a newline-delimited JSON protocol on loopback TCP port `43821`.
+Electron cannot expose macOS as a BLE peripheral by itself, so the native layer is required for real HID advertising. The two processes communicate over an authenticated newline-delimited JSON protocol on a random per-launch loopback TCP port. Electron passes the port and 256-bit token through a private inherited pipe.
 
 ## Implemented
 
@@ -30,6 +30,12 @@ Electron cannot expose macOS as a BLE peripheral by itself, so the native layer 
 - Swift unit tests for HID reports, key mapping, keyboard state, queue ordering, and 5,000 queued reports
 
 ## Run in development
+
+Install the native project generator once:
+
+```bash
+brew install xcodegen
+```
 
 ```bash
 npm install

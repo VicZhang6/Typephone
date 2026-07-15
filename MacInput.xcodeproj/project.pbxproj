@@ -10,6 +10,7 @@
 		0305A332110837C946E96FB1 /* HIDReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D202D82F13C03E109CFAB21C /* HIDReport.swift */; };
 		18DCE334E80CC3D6FB44B9B7 /* SleepWakeMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6A167CC2AD97D6B84F6885 /* SleepWakeMonitor.swift */; };
 		1E8762393D72CA80D2520193 /* MacInputApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A013722F5448AD70176EE0 /* MacInputApp.swift */; };
+		29E968D9B80DB76C9083944E /* RoutingStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C2B1B764BA08015889E80C /* RoutingStateTests.swift */; };
 		39DA2C2F34C2E4C8FCE1EBE7 /* BLEPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF2EB1019B56ADA65712C0F /* BLEPeripheral.swift */; };
 		5F650D6CC7E661FE7C63FF04 /* HIDReportQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E9993221E183716AC80963 /* HIDReportQueueTests.swift */; };
 		64D80B6696854EE41F32DB7D /* ConnectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1976FD439DAB804E7692E676 /* ConnectionController.swift */; };
@@ -59,6 +60,7 @@
 		BF6A167CC2AD97D6B84F6885 /* SleepWakeMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepWakeMonitor.swift; sourceTree = "<group>"; };
 		C2316698DD31ABA881ADF18E /* ControlServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlServer.swift; sourceTree = "<group>"; };
 		C307E55E8B9737CF224F3485 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
+		C3C2B1B764BA08015889E80C /* RoutingStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStateTests.swift; sourceTree = "<group>"; };
 		D202D82F13C03E109CFAB21C /* HIDReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDReport.swift; sourceTree = "<group>"; };
 		D8A013722F5448AD70176EE0 /* MacInputApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacInputApp.swift; sourceTree = "<group>"; };
 		DF292D401BCA13E115C7FC8D /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				670CCEDDEF6D08183AB149DA /* HIDReportTests.swift */,
 				9DC7A468050D50978F998AD1 /* KeyboardStateTests.swift */,
 				4638919E29A94CDD2C803E7E /* KeyCodeMapperTests.swift */,
+				C3C2B1B764BA08015889E80C /* RoutingStateTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				8CE76E57606BA83B04315F25 /* HIDReportTests.swift in Sources */,
 				65BE34006D9747395F34DAEF /* KeyCodeMapperTests.swift in Sources */,
 				BC1210DECEFEF011CD82F5A9 /* KeyboardStateTests.swift in Sources */,
+				29E968D9B80DB76C9083944E /* RoutingStateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

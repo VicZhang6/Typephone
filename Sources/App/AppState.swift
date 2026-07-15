@@ -115,7 +115,7 @@ final class AppState: ObservableObject {
     }
 
     func shutdown() {
-        routing.releaseAll()
+        _ = routing.setMode(.off)
         connection.stop()
         sleepWakeMonitor.stop()
         diagnostics.record("Typephone 退出")

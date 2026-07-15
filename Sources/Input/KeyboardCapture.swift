@@ -13,6 +13,7 @@ struct CapturedKeyboardEvent: Sendable {
     let hidKey: HIDKeyCode?
     let flagsRawValue: UInt64
     let isRepeat: Bool
+    let isPressed: Bool
 
     var flags: CGEventFlags { CGEventFlags(rawValue: flagsRawValue) }
 }
@@ -30,6 +31,16 @@ final class KeyboardCapture {
     private var runLoopSource: CFRunLoopSource?
 
     var isRunning: Bool { eventTap != nil }
+
+    static func currentlyPressedKeyCodes() -> Set<UInt16> {
+        var pressed: Set<UInt16> = []
+        for keyCode in UInt16(0)...UInt16(127) {
+            if CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(keyCode)) {
+                pressed.insert(keyCode)
+            }
+        }
+        return pressed
+    }
 
     func start() -> Bool {
         guard eventTap == nil else { return true }
@@ -91,18 +102,26 @@ final class KeyboardCapture {
         default: return Unmanaged.passUnretained(event)
         }
 
+        let keyCode = UInt16(event.getIntegerValueField(.keyboardEventKeycode))
+        let isPressed: Bool = switch kind {
+        case .keyDown: true
+        case .keyUp: false
+        case .flagsChanged:
+            CGEventSource.keyState(.combinedSessionState, key: CGKeyCode(keyCode))
+        }
         let captured = CapturedKeyboardEvent(
             kind: kind,
-            keyCode: UInt16(event.getIntegerValueField(.keyboardEventKeycode)),
+            keyCode: keyCode,
             hidKey: KeyCodeMapper.hidKey(for: event),
             flagsRawValue: event.flags.rawValue,
-            isRepeat: event.getIntegerValueField(.keyboardEventAutorepeat) != 0
+            isRepeat: event.getIntegerValueField(.keyboardEventAutorepeat) != 0,
+            isPressed: isPressed
         )
         let suppressThisEvent = onEvent?(captured) ?? false
 
-        // RoutingController decides whether the event should be swallowed by
-        // setting suppressEvents. Returning nil is the documented CGEventTap
-        // way to block the event from reaching the Mac's frontmost app.
-        return (suppressEvents || suppressThisEvent) ? nil : Unmanaged.passUnretained(event)
+        // `suppressEvents` selects a writable event tap. RoutingController makes
+        // the per-event decision so releases for keys held before exclusive mode
+        // can still reach the Mac.
+        return suppressThisEvent ? nil : Unmanaged.passUnretained(event)
     }
 }

@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
       - name: Resolve release version
         id: ver
         env:

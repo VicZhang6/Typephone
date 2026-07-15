@@ -1,9 +1,11 @@
 const { app, BrowserWindow, ipcMain, Menu, Tray, nativeImage, nativeTheme } = require('electron');
 const { execFileSync, spawn } = require('node:child_process');
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const net = require('node:net');
 const path = require('node:path');
 const { APP_NAME, LOG_PREFIX, quitLabel } = require('./shared/branding');
+const { buildControlRequest } = require('./shared/control-protocol');
 const versionInfo = require('./shared/version');
 
 /** Opaque fallback when vibrancy is unavailable. */
@@ -27,7 +29,6 @@ function applyWindowTheme() {
 }
 
 const nativeHost = '127.0.0.1';
-const nativePort = 43821;
 const defaultNativeApp = '/tmp/MacInputDerived/Build/Products/Debug/MacInput.app';
 /** Max time to wait for a graceful native shutdown before force-killing. */
 const NATIVE_SHUTDOWN_MS = 2500;
@@ -42,6 +43,9 @@ let nativeShutdownComplete = false;
 let nativeHelper = null;
 /** Tracked PID of the MacInput --electron-helper process. */
 let nativeHelperPid = null;
+/** Per-launch authenticated control channel configuration. */
+let nativePort = null;
+let nativeAuthToken = null;
 /** @type {ReturnType<typeof offlineStatus> | null} */
 let lastTrayStatus = null;
 /** Last menu signature — avoid rebuilding while the user is interacting. */
@@ -79,7 +83,7 @@ function forceKillPid(pid, signal = 'SIGTERM') {
  */
 function listElectronHelperPids() {
   try {
-    const out = execFileSync('/bin/ps', ['-ax', '-o', 'pid=,command='], {
+    const out = execFileSync('/bin/ps', ['-ax', '-o', 'pid=,comm=,args='], {
       encoding: 'utf8',
       timeout: 1000
     });
@@ -87,13 +91,16 @@ function listElectronHelperPids() {
     for (const line of out.split('\n')) {
       const trimmed = line.trim();
       if (!trimmed) continue;
-      const space = trimmed.indexOf(' ');
-      if (space === -1) continue;
-      const pid = Number(trimmed.slice(0, space));
-      const cmd = trimmed.slice(space + 1);
+      const match = trimmed.match(/^(\d+)\s+(\S+)\s+(.+)$/);
+      if (!match) continue;
+      const pid = Number(match[1]);
+      const executable = match[2];
+      const args = match[3];
       if (!Number.isFinite(pid) || pid <= 0 || pid === process.pid) continue;
-      // Match helper only — never the standalone menu-bar MacInput without the flag.
-      if (cmd.includes('MacInput') && cmd.includes('--electron-helper')) {
+      // Match the executable and exact flag, never arbitrary command text that
+      // merely mentions MacInput / --electron-helper.
+      if (path.basename(executable) === 'MacInput'
+          && /(^|\s)--electron-helper(\s|$)/.test(args)) {
         pids.push(pid);
       }
     }
@@ -119,6 +126,8 @@ function killElectronHelpersSync() {
   }
   nativeHelper = null;
   nativeHelperPid = null;
+  nativePort = null;
+  nativeAuthToken = null;
 }
 
 function killElectronHelpers(exceptPid = null) {
@@ -157,6 +166,10 @@ function resolveNativeBinary(nativeApp) {
 
 function requestNative(command, payload = {}) {
   return new Promise((resolve, reject) => {
+    if (!nativePort || !nativeAuthToken) {
+      reject(new Error('Native control channel is not configured'));
+      return;
+    }
     const socket = net.createConnection({ host: nativeHost, port: nativePort });
     let buffer = '';
     const timeout = setTimeout(() => {
@@ -166,7 +179,7 @@ function requestNative(command, payload = {}) {
 
     socket.setEncoding('utf8');
     socket.once('connect', () => {
-      socket.write(`${JSON.stringify({ command, ...payload })}\n`);
+      socket.write(`${JSON.stringify(buildControlRequest(command, payload, nativeAuthToken))}\n`);
     });
     socket.on('data', (chunk) => {
       buffer += chunk;
@@ -218,7 +231,7 @@ async function publishStatus() {
 }
 
 function launchNativeBackend() {
-  // Drop orphans from previous sessions so they cannot pile up on CPU/RAM/port 43821.
+  // Drop orphans from previous sessions so they cannot pile up on CPU/RAM.
   killElectronHelpersSync();
 
   const nativeApp = resolveNativeAppPath();
@@ -228,13 +241,22 @@ function launchNativeBackend() {
     return;
   }
 
-  // Spawn the binary directly (not `open -n`) so we own the PID and can kill it on quit.
+  nativePort = crypto.randomInt(49152, 65536);
+  nativeAuthToken = crypto.randomBytes(32).toString('hex');
+
+  // Spawn directly so Electron owns the helper. A private inherited pipe carries
+  // the per-launch control port + token without exposing either in argv or env.
   const child = spawn(binary, ['--electron-helper'], {
-    detached: true,
-    stdio: 'ignore'
+    detached: false,
+    stdio: ['ignore', 'ignore', 'ignore', 'pipe']
   });
   nativeHelper = child;
   nativeHelperPid = child.pid || null;
+  const controlPipe = child.stdio[3];
+  controlPipe.once('error', (error) => {
+    console.warn(`[${LOG_PREFIX}] Native control pipe failed:`, error.message);
+  });
+  controlPipe.end(JSON.stringify({ port: nativePort, authToken: nativeAuthToken }));
   // Debug stub executors may re-exec; re-resolve the real helper PID shortly after launch.
   setTimeout(refreshTrackedHelperPid, 300);
   setTimeout(refreshTrackedHelperPid, 1000);
@@ -246,6 +268,8 @@ function launchNativeBackend() {
     refreshTrackedHelperPid();
     if (!listElectronHelperPids().length) {
       nativeHelperPid = null;
+      nativePort = null;
+      nativeAuthToken = null;
     }
     if (code || signal) {
       console.warn(`[${LOG_PREFIX}] Native helper exited code=${code} signal=${signal}`);
@@ -256,6 +280,8 @@ function launchNativeBackend() {
     if (nativeHelper === child) {
       nativeHelper = null;
       nativeHelperPid = null;
+      nativePort = null;
+      nativeAuthToken = null;
     }
   });
   // Keep the child referenced until quit so we can signal it; do not unref.

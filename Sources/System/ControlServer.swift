@@ -5,17 +5,21 @@ import AppKit
 /// Small loopback-only control plane used by the Electron shell.
 ///
 /// The native process remains the owner of CoreBluetooth. Electron talks to
-/// this server with newline-delimited JSON so the UI can be replaced without
-/// moving BLE/HID work into JavaScript.
+/// this authenticated server with newline-delimited JSON over a random
+/// per-launch port so BLE/HID work stays outside JavaScript.
 @MainActor
 final class ControlServer {
-    static let port: UInt16 = 43821
+    private static let maxRequestBytes = 64 * 1024
 
     private weak var state: AppState?
+    private let port: UInt16
+    private let authToken: String
     private var listener: NWListener?
 
-    init(state: AppState) {
+    init(state: AppState, port: UInt16, authToken: String) {
         self.state = state
+        self.port = port
+        self.authToken = authToken
     }
 
     func start() {
@@ -24,7 +28,7 @@ final class ControlServer {
         do {
             let parameters = NWParameters.tcp
             parameters.requiredInterfaceType = .loopback
-            let listener = try NWListener(using: parameters, on: NWEndpoint.Port(rawValue: Self.port)!)
+            let listener = try NWListener(using: parameters, on: NWEndpoint.Port(rawValue: port)!)
             listener.newConnectionHandler = { [weak self] connection in
                 Task { @MainActor [weak self] in
                     self?.accept(connection)
@@ -73,7 +77,18 @@ final class ControlServer {
                 while let newline = pending.firstIndex(of: 0x0A) {
                     let line = pending[..<newline]
                     pending.removeSubrange(...newline)
+                    guard line.count <= Self.maxRequestBytes else {
+                        send(["type": "error", "message": "Request too large"], on: connection)
+                        connection.cancel()
+                        return
+                    }
                     handle(line: String(decoding: line, as: UTF8.self), on: connection)
+                }
+
+                guard pending.count <= Self.maxRequestBytes else {
+                    send(["type": "error", "message": "Request too large"], on: connection)
+                    connection.cancel()
+                    return
                 }
 
                 if isComplete {
@@ -89,9 +104,11 @@ final class ControlServer {
         guard
             let data = line.data(using: .utf8),
             let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-            let command = object["command"] as? String
+            let command = object["command"] as? String,
+            let providedToken = object["authToken"] as? String,
+            Self.tokensMatch(providedToken, authToken)
         else {
-            send(["type": "error", "message": "Invalid command"], on: connection)
+            send(["type": "error", "message": "Unauthorized"], on: connection)
             return
         }
 
@@ -179,5 +196,16 @@ final class ControlServer {
                 NSLog("Control connection send failed: %{public}@", error.localizedDescription)
             }
         })
+    }
+
+    private static func tokensMatch(_ lhs: String, _ rhs: String) -> Bool {
+        let left = Array(lhs.utf8)
+        let right = Array(rhs.utf8)
+        guard left.count == right.count else { return false }
+        var difference: UInt8 = 0
+        for index in left.indices {
+            difference |= left[index] ^ right[index]
+        }
+        return difference == 0
     }
 }

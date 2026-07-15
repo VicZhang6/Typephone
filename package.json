@@ -16,7 +16,7 @@
     "build:native": "xcodegen generate && xcodebuild -project MacInput.xcodeproj -scheme MacInput -configuration Debug -sdk macosx -derivedDataPath /tmp/MacInputDerived CODE_SIGNING_ALLOWED=NO build",
     "build:native:release": "xcodegen generate && xcodebuild -project MacInput.xcodeproj -scheme MacInput -configuration Release -sdk macosx -derivedDataPath build/native CODE_SIGNING_ALLOWED=NO build",
     "test:native": "xcodegen generate && xcodebuild -project MacInput.xcodeproj -scheme MacInputTests -configuration Debug -sdk macosx -derivedDataPath /tmp/MacInputDerived CODE_SIGNING_ALLOWED=NO test",
-    "check:js": "node --check electron/main.js && node --check electron/preload.js && node --check electron/renderer/app.js && node --check electron/shared/version.js && node --check scripts/version.js",
+    "check:js": "node --check electron/main.js && node --check electron/preload.js && node --check electron/renderer/app.js && node --check electron/shared/control-protocol.js && node --check electron/shared/version.js && node --check scripts/version.js && node --test TestsJS/*.test.js",
     "start:native": "open /tmp/MacInputDerived/Build/Products/Debug/MacInput.app",
     "start": "electron electron/main.js",
     "dev": "npm run build:native && electron electron/main.js",

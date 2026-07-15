@@ -23,6 +23,26 @@ enum RoutingMode: String, CaseIterable, Codable, Sendable {
     }
 }
 
+struct HostKeyPassthrough: Sendable {
+    private(set) var keyCodes: Set<UInt16> = []
+
+    mutating func begin(with keyCodes: Set<UInt16>) {
+        self.keyCodes = keyCodes
+    }
+
+    mutating func clear() {
+        keyCodes.removeAll(keepingCapacity: true)
+    }
+
+    mutating func shouldPassThrough(keyCode: UInt16, isPressed: Bool) -> Bool {
+        guard keyCodes.contains(keyCode) else { return false }
+        if !isPressed {
+            keyCodes.remove(keyCode)
+        }
+        return true
+    }
+}
+
 @MainActor
 final class RoutingController: ObservableObject {
     @Published private(set) var mode: RoutingMode = .off
@@ -32,7 +52,7 @@ final class RoutingController: ObservableObject {
     private let permissions: PermissionManager
     private let capture = KeyboardCapture()
     private var keyboardState = KeyboardState()
-    private var pressedModifierKeyCodes: Set<UInt16> = []
+    private var hostKeyPassthrough = HostKeyPassthrough()
     private var capsLockActive = false
 
     var onEmergencyExit: (() -> Void)?
@@ -55,9 +75,13 @@ final class RoutingController: ObservableObject {
 
     @discardableResult
     func setMode(_ newMode: RoutingMode) -> Bool {
+        let keysHeldBeforeExclusive = newMode == .exclusive && mode != .exclusive
+            ? KeyboardCapture.currentlyPressedKeyCodes()
+            : []
         releaseAll()
 
         if newMode == .off {
+            hostKeyPassthrough.clear()
             capture.stop()
             mode = .off
             return true
@@ -79,8 +103,10 @@ final class RoutingController: ObservableObject {
         }
 
         capture.suppressEvents = newMode == .exclusive
+        hostKeyPassthrough.begin(with: keysHeldBeforeExclusive)
         guard capture.start() else {
             capture.suppressEvents = false
+            hostKeyPassthrough.clear()
             mode = .off
             return false
         }
@@ -103,7 +129,6 @@ final class RoutingController: ObservableObject {
 
     func releaseAll() {
         keyboardState.clear()
-        pressedModifierKeyCodes.removeAll(keepingCapacity: true)
         capsLockActive = false
         _ = peripheral.sendKeyboardReport(HIDReportBuilder.zero)
     }
@@ -132,18 +157,23 @@ final class RoutingController: ObservableObject {
 
         switch event.kind {
         case .keyDown:
-            guard !event.isRepeat else { return false }
-            guard let key = event.hidKey else { return false }
-            keyboardState.press(key)
-            _ = peripheral.sendKeyboardReport(keyboardState.report())
+            if !event.isRepeat, let key = event.hidKey {
+                keyboardState.press(key)
+                _ = peripheral.sendKeyboardReport(keyboardState.report())
+            }
         case .keyUp:
-            guard let key = event.hidKey else { return false }
-            keyboardState.release(key)
-            _ = peripheral.sendKeyboardReport(keyboardState.report())
+            if let key = event.hidKey {
+                keyboardState.release(key)
+                _ = peripheral.sendKeyboardReport(keyboardState.report())
+            }
         case .flagsChanged:
             handleFlagsChanged(event)
         }
-        return false
+        let passThrough = hostKeyPassthrough.shouldPassThrough(
+            keyCode: event.keyCode,
+            isPressed: event.isPressed
+        )
+        return mode == .exclusive && !passThrough
     }
 
     private func handleFlagsChanged(_ event: CapturedKeyboardEvent) {
@@ -159,13 +189,7 @@ final class RoutingController: ObservableObject {
         }
 
         guard let modifier = KeyCodeMapper.modifier(for: event.keyCode) else { return }
-        if pressedModifierKeyCodes.contains(event.keyCode) {
-            pressedModifierKeyCodes.remove(event.keyCode)
-            keyboardState.setModifier(modifier, pressed: false)
-        } else {
-            pressedModifierKeyCodes.insert(event.keyCode)
-            keyboardState.setModifier(modifier, pressed: true)
-        }
+        keyboardState.setModifier(modifier, pressed: event.isPressed)
         _ = peripheral.sendKeyboardReport(keyboardState.report())
     }
 
